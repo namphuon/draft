@@ -133,7 +133,7 @@ TCGA-CESC & WGS and RNA-seq &Experimental& 69 & TCGA~\cite{TODO} \\ \hline
 \end{table*}
 \section{Results}
 
-\subsection{Simulated datasets}
+\subsection{HPV-Sim Simulated Datasets}
 We ran all three methods on the simulated datasets that contained 25 viral integrations per dataset (Fig.~\ref{sim_results}).  All methods were run on a dedicated compute node with 24 CPUs and given 48 hours to complete.  Only ViFi and VERSE completed within the allotted time; ViralFusionSeq failed to complete on any of the datasets.  ViFi required an average wall clock running time of 7 hours and 30 minutes (minimum of hours 13 minutes to maximum of 8 hours and 2 minutes); VERSE required an average of 8 hours and 19 minutes to complete per dataset (minimum of 6 hours and 1 minute to a maximum of 9 hours and 19 minutes).  
 
 Both VERSE and ViFi (both with and without HMMs) have high precision and recall on the easier datasets (95-99\% similarity with HPV16).  However, when the integrated virus has only 90\% similarity to HPV16, VERSE's precision and recall drops by one-half.  ViFi, on the other hand, is still able to accurately detect the highly mutated simulated HPV16 sequence.  On the dataset that contains the novel AgPV1 sequence, only ViFi with the HMMs is able to accurately detect integration events (88\% recall and 93\% precision).  ViFi without the HMMs is only able to detect 20\% of the integrations, but with high precision.  VERSE is unable to detect any integration events.  
@@ -147,6 +147,10 @@ Interestingly, VERSE takes significantly longer when it can detect more integrat
 \caption[Precision-recall on simulated datasets.]
 {\label{sim_results}  {\bf Precision-recall on simulated datasets.}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  There are 25 simulated integrations per dataset.  VERSE failed to detect any viruses on the AgPV1 model condition.  All datasets were simulated with 25x coverage.}
 \end{figure}
+
+
+\subsection{HCC-WGS and HCC-RNAseq datasets}
+Of the 21 experimentally verified integration points in the HCC-WGS dataset, ViFi was able to detect 17 of the integration points, and VERSE was able to detect 16.  In the HCC-RNAseq datasets, 
 
 %\begin{figure}[htpb]
 %  \centering
@@ -336,7 +340,8 @@ HPV16-positive W12 cell line both viral and integrated HPV genomes in early stag
 
 \section*{Funding}
 
-
+\section*{Disclosures}
+VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells computational tools for analyzing mass spectrometry data. The terms of this arrangement have been reviewed and approved by the University of California, San Diego in accordance with its conflict of interest policies. DP was not involved in the research presented here
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
 %\bibliographystyle{plainnat}

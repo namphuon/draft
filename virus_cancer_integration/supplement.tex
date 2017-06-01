@@ -17,6 +17,9 @@
 \usepackage{hhline}
 \usepackage{graphics}
 \usepackage{hyperref}
+\usepackage[export]{adjustbox}
+\usepackage{float}
+\usepackage[caption = false]{subfig}
 
 % Use times if you have the font installed; otherwise, comment out the
 % following line.
@@ -128,7 +131,7 @@
   \centering
   \includegraphics[width=1\linewidth]{{results/simulation.1000}.pdf}\\
 \caption[Precision-recall on simulated datasets with 1000 viral integrations.]
-{  {\bf Precision-recall on simulated datasets.}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  VERSE failed complete on any datasets.  All datasets were simulated with 25x coverage.}\label{sim_results_1000}
+{ {\bf Precision-recall on simulated datasets.  \label{sim_results_1000}}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  VERSE failed complete on any datasets.  All datasets were simulated with 25x coverage.}
 \end{figure}
 
 
