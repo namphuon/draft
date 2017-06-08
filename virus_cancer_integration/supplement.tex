@@ -19,7 +19,7 @@
 \usepackage{hyperref}
 \usepackage[export]{adjustbox}
 \usepackage{float}
-\usepackage[caption = false]{subfig}
+\usepackage{subfig}
 
 % Use times if you have the font installed; otherwise, comment out the
 % following line.
@@ -80,14 +80,11 @@
 \normalsize{$^\ast$To whom correspondence should be addressed; E-mail: vbafna@cs.ucsd.edu.}
 }
 
-%\makeatletter 
-%\renewcommand{\thefigure}{S\@arabic\c@figure} 
-%\makeatletter 
-%\renewcommand{\thetable}{S\@arabic\c@table} 
-%\makeatletter 
-%\renewcommand{\thesection}{S\@arabic\c@section} 
-%\counterwithin{figure}{section}
-%\counterwithin{table}{section}
+\appendix
+\setcounter{figure}{0}
+\renewcommand{\thesection}{S.\arabic{section}}   
+\renewcommand{\thefigure}{S\arabic{figure}}   
+\renewcommand{\thetable}{S\arabic{table}}   
 
 %%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
 
@@ -118,20 +115,21 @@
 \clearpage
 \listoffigures
 \clearpage
-%\listoftables
-%\clearpage
+\listoftables
+\clearpage
 
-\appendix
-\setcounter{figure}{0}
-\renewcommand{\thesection}{S.\arabic{section}}   
-\renewcommand{\thefigure}{S\arabic{figure}}   
-\renewcommand{\thetable}{S\arabic{table}}   
 
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=1\linewidth]{{results/simulation.1000}.pdf}\\
-\caption[Precision-recall on simulated datasets with 1000 viral integrations.]
-{ {\bf Precision-recall on simulated datasets.  \label{sim_results_1000}}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  VERSE failed complete on any datasets.  All datasets were simulated with 25x coverage.}
+  \caption[Precision-recall on simulated datasets with 1000 viral integrations.] {{\bf Precision-recall on simulated datasets.  \label{sim_results_1000}}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  VERSE failed complete on any datasets.  All datasets were simulated with 25x coverage.}
+\end{figure}
+
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/fusion_TCGA-C5-A0TN}.pdf}\\
+  \caption[Example of fusion mRNA found by ViFi.] {{\bf Example of fusion mRNA found by ViFi  \label{vifi_exmaple}}  We show an example of a fusion mRNA event found by ViFi that was not reported by the Tang et al. 2014 study nor found by VERSE for the sample TCGA-C5-A0TN on the genomic segment chr3:126,847,238-126,849,346.  The first track is the results from mapping the RNA-seq data, and the second track is the results from mapping the WGS data.  Reads in red are chimeric reads in which one end maps to the human hg19 reference (shown) and the other end maps to the viral reference.  The results show that both the top and bottom track contain chimeric reads clustered around this interval.}
 \end{figure}
 
 
