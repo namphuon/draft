@@ -125,6 +125,13 @@
   \caption[Precision-recall on simulated datasets with 1000 viral integrations.] {{\bf Precision-recall on simulated datasets.  \label{sim_results_1000}}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  VERSE failed complete on any datasets.  All datasets were simulated with 25x coverage.}
 \end{figure}
 
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/expression.summary.barplot}.pdf}\\
+\caption[Expression of mRNA transcripts in genomic segments with and without integrations.]
+{\label{expression_transcripts_fpkm}  {\bf Expression of mRNA transcripts in genomic segments with and without integrations.}  We report the mean FPKM expression of annotated features in genomic segments with and without integrations.  For a given integration in a sample, we select a 10kb flanking region around the integration site.  We then report the expression level in samples that have an integration in this region and samples that do not.  In addition, we report the expression level randomly selected segments as a baseline. The p-values for the paired Wilcoxon signed rank test of the difference in FPKM expression for genomic segments with and mean FPKM expression in segments without integrations are: LINE < 1e-12;	LTR < 1e-10;  Gene < 1e-10; and	Oncogenes < NA.}
+\end{figure}
+
 
 \begin{figure}[htpb]
   \centering

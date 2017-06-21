@@ -6,7 +6,7 @@
 \usepackage[caption = false]{subfig}
 \usepackage{graphicx}
 
-\copyrightyear{2015} \pubyear{2015}
+\copyrightyear{2017} \pubyear{2017}
 
 \access{Advance Access Publication Date: Day Month Year}
 \appnotes{Manuscript Category}
@@ -54,7 +54,120 @@ One of the shortcomings of reference-based pairwise alignment approaches for per
 
 Previous research has shown that profile HMMs can have difficulty in recognizing sequences that come from evolutionarily divergent families, and that using an ensemble of profile HMMs (eHMMs)~\cite{Mirarab2012,Nguyen2014,Nguyen2015,Nguyen2016_hippi} can improve recognition rates.  The eHMMs technique has been shown to have better detection and alignment of query sequences to a given model compared to the single HMM approach, and as a result, better downstream downstream phylogenetic analyses. 
 
-\section{Our approach}
+Here, we present \textbf{V}irus \textbf{I}ntegration and \textbf{F}usion \textbf{I}dentification (ViFi), a new tool for detecting viral integrations from WGS data and human-virus fusion mRNA from RNASeq data (Fig.~\ref{flowchart}).  Unlike other viral integration detection pipelines that use reference-based alignment mapping for identifying viral reads, ViFi uses a combination of reference-based alignment mapping and eHMMs to identify viral reads.  In addition, ViFi incorporates the mappability scores to reduce false positive detections.  The end result is a tool that can accurately detect viral integrations with high precision and recall, even when the viruses are highly mutated or are not found in the reference genomes.  
+
+We show a comparison ViFi to competing tools, VERSE and ViralFusionSeq, on both simulated and biological datasets with experimentally verified integrations.  These datasets include simulated WGS of genomes containing integrated HPV (HPV-SIM), WGS from HCC samples taken from patients with HBV~\cite{Sung2012} (HCC-WGS), RNA-seq datasets from HCC cell lines infected with HBV~\cite{Lau2014} (HCC-RNA).  We also compared the fusion mRNA sequences found by ViFi and VERSE to those from another study on fusion human-viral mRNA transcripts~\cite{Tang2013} on tumor cervical samples taken from the The Cancer Genome Atlas (TCGA-CESC).  Finally, we perform a comprehensive analysis on the impact of HPV integration on transcription expression using matched paired WGS and RNA-seq data from the TCGA-CESC datasets.  Details for each of the datasets is provided in the \textbf{Datasets} section, and a summary is provided in Table~\ref{table:data}. 
+
+%We compare ViFi with VERSE~\cite{Wang2015} and ViralFusionSeq~\cite{Li2013} on both simulated and real biological datasets.  We selected VERSE and ViralFusionSeq for comparison as VERSE is among the most recent viral integration tools and has been shown to outperform VirusFinder and VirusSeq, and ViralFusionSeq is the only viral integration tool available on NIH HPC system.  We report the true positive and false positive integration points reported on the simulated datasets, and the true positive integration points reported on biological datasets with experimentally verified integration points.  Finally, we report the number of fusion transcripts detected from the matched RNA-seq datasets, and the number of those transcripts that are supported from the matched WGS datasets.
+
+\section{Results}
+
+\subsection{HPV-Sim Simulated Datasets}
+We ran all ViFi, both with and without the HMMs, VERSE, and ViralFusionSeq on the simulated datasets that contained 25 viral integrations per dataset (Fig.~\ref{sim_results}).  All methods were run on a dedicated compute node with 24 CPUs and given 48 hours to complete.  Only ViFi and VERSE completed within the allotted time; ViralFusionSeq failed to complete on any of the datasets.  ViFi required an average wall clock running time of 7 hours and 30 minutes (minimum of hours 13 minutes to maximum of 8 hours and 2 minutes).  The impact of using HMMs had minimal impact on the running time of ViFi (average increase of 14 seconds).  VERSE required an average of 8 hours and 19 minutes to complete per dataset (minimum of 6 hours and 1 minute to a maximum of 9 hours and 19 minutes).  Due to ViralFusionSeq being unable to complete on these datasets, we exclude ViralFusionSeq from the remainder of our comparison study.
+
+Both ViFi (both with and without HMMs) and VERSE have high precision and recall on the easier datasets (95-99\% similarity with HPV16).  However, when the integrated virus has only 90\% similarity to HPV16, VERSE's precision and recall drops by one half.  ViFi, on the other hand, is still able to accurately detect the highly mutated simulated HPV16 sequence.  On the dataset that contains the novel AgPV1 sequence, only ViFi with the HMMs is able to accurately detect integration events (88\% recall and 93\% precision).  ViFi without the HMMs is only able to detect 20\% of the integrations, but with high precision.  VERSE is unable to detect any integration events.  
+
+Interestingly, VERSE takes significantly longer when it can detect more integrations.  When no integrations are detected, it takes roughly 6 hours to complete, however, this time jumps by two to three hours when it detects 20 or more integrations.  This made VERSE impossible to complete on any of the datasets with 1000 integrations.  ViFi, on the other hand, had an average increase of running time of 32 minutes when increasing the number of simulated viral integrations from 25 to 1000 integrations, without any loss of recall or precision (Fig. S1).
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/simulation.main}.pdf}\\
+\caption[Precision-recall on simulated datasets.]
+{\label{sim_results}  {\bf Precision-recall on simulated datasets.}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  There are 25 simulated integrations per dataset.  VERSE failed to detect any viruses on the AgPV1 model condition.  All datasets were simulated with 25x coverage.}
+\end{figure}
+
+
+\subsection{HCC-WGS and HCC-RNAseq datasets}
+Of the 21 experimentally verified integration points in the HCC-WGS dataset, ViFi was able to detect 17 of the integration points, and VERSE was able to detect 16.  In the HCC-RNAseq datasets, both ViFi and VERSE both recovered 10 out of 11 verified fusion mRNA points.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{results/hcc.pdf}\\
+\caption[Recovery of experimentally verified integration sites from biological datasets.]
+{\label{bio_results}  {\bf Recovery of experimentally verified integration sites.}  We report the number of experimentally verified integration sites recovered from biological datasets for our method and VERSE.  The datasets include the HCC WGS dataset from the Sung et al. 2012 study (21 experimentally validated integration sites) and the HCC RNAseq cell line dataset from the Lau et al. 2014 study (11 experimentally validated integration sites).}
+\end{figure}
+
+
+\subsection{Comparison of fusion mRNA detection on TCGA-CESC dataset}
+We compared fusion mRNA events detected by ViFi and VERSE to the results reported in the Tang et al. study~\cite{Tang2013} on 28 TCGA-CESC samples with matched WGS and RNA-seq data.  For each sample, we ran ViFi on the WGS data to detect viral integrations.  For each viral integration reported by ViFi, we report whether or not each of the three methods also found one or more fusion mRNA events within a 100kb interval around that integration point.  A Venn diagram showing the overlap of fusion mRNA events found by the different methods show that in any case in which VERSE or the Tang study found a fusion mRNA event, ViFi also found that event (Fig.~\ref{venn_diagram}).  In addition, ViFi found five fusion mRNA events that was also supported supported by the WGS data that neither VERSE or the Tang study identified.  Closer inspection of these events show strong evidence that these fusion mRNA sequences are also supported by the WGS data, but were missed by VERSE and the original Tang et al. 2013 study (see Fig. S2 for an example).
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{results/tcga_triple.pdf}\\
+\caption[Venn diagram of fusion reads recovered from the RNAseq data from Larsson 2013 study]
+{\label{venn_diagram}  {\bf Venn diagram of fusion read integration points recovered from the TCGA-CESC samples with matched RNA-Seq and WGS sequencing.}  We show a Venn diagram of the overlap of the WGS integration points with a matching mRNA event within 100kb reported by ViFi, VERSE, and the Tang et al. 2013 study on the TCGA-CESC samples with both RNA-Seq and WGS sequencing matched pair data.  }
+\end{figure}
+
+\subsection{TCGA-CESC integration analysis}
+We applied ViFi to the 68 TCGA-CESC cervical cancer samples with matched WGS and RNA-seq data.  We outline the results below.
+\paragraph{\textbf{WGS integration analysis}.} We found integrations in 51 samples (226 integrations total).  For each integration, we examined the number of annotated genomic features within 10kb of the integration point (Fig.~\ref{integration_counts}) and compared the distribution of observed annotations to the expected annotations resulting from random intervals.  Previous research has observed that genomic regions with HPV integration were enriched in genes~\cite{Akagi2014} or long terminal repeat/endogenous retroviruses (LTR/ERV1)~\cite{Hu2015} elements. We also observed an enrichment of genes near integration points (Z-test; p-value < 3e-04), but also a depletion of all LTR elements near integration points (Z-test; p-value < 3e-04).  In addition, we observed an enrichment of Long interspersed nuclear element (LINE) near integration points (Z-test; p-value < 6e-03).  
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/expected.counts}.pdf}\\
+\caption[Annotations of integrated regions.]
+{\label{integration_counts}  {\bf Annotations of integrated regions.}  We report the number of annotations within a 10kb interval of each integration.  We also report the expected integrations from 1000 simulated experiments over the same interval.  The p-values of the observed integration counts (Z-test)  are: LINE < 6e-03;	LTR < 3e-04;  Gene < 3e-04; and	Oncogenes < 0.098.}
+\end{figure}
+
+We observed recurrent integrations (within 50kb of each other) in two loci: two samples with integrations between region chr13:73955151-74005092 and four samples with integrations between region chr8:128747810-128889296.  The first region contains no nearby genes.  The latter region contains the MYC and PVT1 genes and has previously been found to contain recurrent integrations from previous studies~\cite{Hu2015}.  However, the vast majority of integrations are non-recurrent.
+
+\paragraph{\textbf{Fusion mRNA analyses}.} 
+We found 49 genomic integrations with fusion mRNA sequences (392 fusion mRNA sequences total).  While a few of the fusion mRNA breakpoints were found within close proximity of the genomic integration breakpoint (27\% were within 100 bps), the majority were more than 1000 bps away (66\%; Fig.~\ref{distance_breakpoint}).  This suggests that the majority of the observed fusion reads were produced by a splicing event.  
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{results/{wgs.rna.histogram.distances}.pdf}\\
+\caption[Distance of fusion mRNA breakpoint to nearest WGS integration breakpoint.]
+{\label{distance_breakpoint}  {\bf Histogram of distance of fusion mRNA breakpoint to nearest WGS integration breakpoint.}  }
+\end{figure}
+
+For each fusion mRNA sequence, we examine the number of paired end chimeric reads that support whether the fusion event is human to viral or viral to human.  As the RNA-sequencing library preparation was not strand specific, we assume that the viral read is oriented in the direction of the viral genome and infer the orientation based upon the direction of the human read (Fig.~\ref{mrna_directions}).  The 82\% of fusion mRNA sequences were orientated in the viral to human direction.  Of the fusion mRNA sequences that were oriented in the human to viral direction, 87\% were within 10kb of an annotated gene.  These observations suggest that transcription of fusion mRNA sequences are largely being driven by the upstream regulatory elements within the viral genome.  In the rare cases in which the fusion mRNA sequences are orientated from human to viral direction, then regulatory elements in the human genome are driving this expression.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/rna_direction.summary.histogram}.pdf}\\
+\caption[Fusion reads supp.]
+{\label{mrna_directions}  {\bf Orientation of the mRNA fusion transcripts.}  We report orientation of the fusion mRNA sequences and support for the orientation.  Orientation is inferred from the paired end reads under the assumption that the viral read is always oriented in the direction of the viral genome, and support for the orientation is computed as the proportion of paired end reads supporting that orientation.  In addition, we report whether there is a gene within 10kb of the fusion mRNA read.}
+\end{figure}
+
+\paragraph{\textbf{Impact of integration on mRNA expression}.}  We examined the log-fold change in transcription expression between regions in which a sample has an integration within 10kb and samples without an integration within that same interval (Supplemental File 1).  Genomic segments with integrations had increased expression of nearby human mRNA (2.5 fold increase), with significantly higher expression when human-viral fusion mRNA are present (5.5 fold increase).  When we examined regions that had known annotations (LINEs, LTRs, genes, or oncogenes), we found that that expression was significantly enhanced the annotated regions, with a 6.4 to 7.0 fold increase in expression for LINEs, LTRs, and genes, with a increases to 14.5 to 16.8 fold increase when fusion mRNA sequences are present (Fig.~\ref{expression_transcripts}).
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/expression.summary.barplot}.pdf}\\
+\caption[Expression of mRNA transcripts in genomic segments with and without integrations.]
+{\label{expression_transcripts}  {\bf Log2 fold change in expression of mRNA transcripts in genomic segments with and without integrations.}  We report the Log2 fold change in expression of annotated features in genomic segments with and without integrations, both for integrations with and without fusion mRNA sequences.  For a given integration in a sample, we select a 10kb flanking region around the integration site.  We then report the expression level in samples that have an integration in this region and samples that do not.}
+\end{figure}
+
+The impact of integration on expression is most prominent downstream from the integration site~\cite{updown}.  For each integration with a fusion mRNA sequence, we identify the human strand that contains the positive viral genome and examine the expression upstream and downstream in a 10kb interval around the integration point.  In some cases, there were multiple integration points within the 10kb interval, or we were unable to determine which human strand contains the positive viral genome.  The first observation is when there is a fusion mRNA present in the interval, the increase in expression is most prominent downstream of the integration point.  In general, there is typically two- to four-fold increase in expression when fusion mRNA is present.  Finally, integrations without any fusion mRNA sequences show no change in expression.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=1\linewidth]{{results/updown.10000.final}.pdf}\\
+\caption[Fusion reads supp.]
+{\label{updown}  {\bf Average log-fold expression change around integration point.}  We report the average log-fold expression change around an integration point.  The position is reported relative to the integration point in the human genome.  We separate out the segments into four categories, based upon the orientation of the fusion mRNA reads within the genomic interval.   Orientation is determined when at least 75\% of the the paired end reads supporting a fusion mRNA have the same orientation, otherwise it is listed as unable to be determined.  Finally, some segments do not contain fusion mRNAs and are shown separately.}
+\end{figure}
+
+\section{Discussion}
+We present ViFi, a new method for detection of viral integration sites and fusion mRNA sequences.  The key advances of ViFi is the use of eHMMs to better detect evolutionarily divergent viruses and the use of mappability scores to reduce false positive detections.  Our simulation experiments shows that ViFi has high precision and sensitivity in detecting viruses, even under difficult conditions of highly mutated viruses or novel viruses.  VERSE, on the other hand, performs poorly or fails to detect integration on the hardest model conditions.  On the biological datasets, ViFi detects more integration events than VERSE.  ViFi is computationally efficient and its running time is dramatically impacted by increased viral integrations, whereas VERSE is unable to complete analyses within 48 hours on datasets with 1,000 integrations.
+
+Previous research on the role of viral integration on tumorgenesis focused on identifying genomic hotspots containing recurrent integrations and identifying change in both host and viral gene expression resulting from integration~\cite{Tang2013,Lawrence2015,Hu2015,Zhang2016}.  One key observation is that recurrent integrations often occurred near or in known oncogenes such as MYC, PVT1, ERBB2, RAD51~\cite{Tang2013}.  Hu et al. 2015 suggested that observation is a result from HPV integrating randomly across the genome until an integration occurs in a region that provides a proliferation advantage and results in oncogenesis.  However, the vast majority of integrations are non-recurrent and the majority of samples do not have integrations in or near oncogenes.  Thus, focusing on specific genes that have an up or down regulation is missing a large piece of the puzzle on the mechanisms of how viral integration causes cancer.
+
+Our results show that viral integration not only can result in fusion human-viral mRNA sequences, but also a large increase in transcription, especially when fusion mRNA sequences are present.  We hypothesize that this increase is a result of recruitment of transcription factors by the HPV's upstream regulatory region (URR) and subsequent transcription read-through to produce both viral-human mRNA transcripts as well as an uptick of expression downstream from the viral integration point.  When there are no fusion mRNA transcripts present, it is possible that the integrated genome is unable to recruit transcript factors because the URR  has been disrupted.  Thus, we do not observe the same increase in expression for integrations without fusion mRNA sequences.
+
+Our results suggests another potential mechanism for viral-related oncogenesis: genomic instability and pathway disruption via expression of LINE and LTR elements that are not normally expression via transcription read-through.  LINE-1 (L1) elements are retrotransposons that have a "cut and paste" mechanism which allows it to replicate itself through RNA intermediates and re-insert itself back into the genome in DNA.  L1 elements have been shown to create double stranded breaks in the host cell genome, which might lead to genomic instability~\cite{Gasior2006}.  L1 elements are typically epigenetically repressed in somatic cells~\cite{Kinomoto2007,Sigurdsson2012}, they have been shown to be active in selected neoplasms~\cite{Rodic2013,Xiao-Jie2016}.  Interestingly, the \emph{p53} gene will often activate the apoptotic pathway when an L1 re-integrates into the genome, however, this can be blocked by the HPV E6 protein~\cite{Haoudi2004}.  LTRs can act as promoters, enhancers, and transcriptional factor-binding sites, and can potentially be transcriptionally active, depending on the tissue~\cite{Yu2013}.  In most cases, LTRs are transcriptionally silenced by epigenetic mechanisms, however, in cancer, LTRs have been shown to have up-regulated expression (see~\cite{Romanish2010} for a review).  Our results show more than an order of magnitude fold increase in expression of these elements in regions proximal to integration sites.
+
+Finally, the production of fusion transcripts might also be 
+
+  
+
+
+in HBx-LINE1, A fusion transcript between human LINE L1 element and an HBV X gene, has been shown to result in increased susceptibility to liver cancer by acting as a sponge for miRNAs~\cite{Lau2014,Liang2016}.  
+
+
+ 
+\section{Method}
+\subsection{ViFi}
 We present \textbf{V}irus \textbf{I}ntegration and \textbf{F}usion \textbf{I}dentification (ViFi), a new pipeline for detection of integration sites (Fig.~\ref{flowchart}).  Unlike other integration detection pipelines that use reference-based alignment mapping for identifying viral reads, ViFi uses a combination of reference-based alignment mapping and ensemble of profile HMMs to identify viral reads.  
 
 \paragraph{\textbf{Pre-processing.}} ViFi begins with a pre-processing step (see Fig.~\ref{flowchart}a) that builds an BWA index on the human reference genome and viral genomes (Hg19+viral index).  In addition, ViFi takes the genomes from the viral family and estimates a multiple sequence alignment (MSA) on each family using PASTA~\cite{Mirarab2014}.  A maximum likelihoood (ML) tree is estimated from the alignment using RAxML~\cite{Stamatakis2014}.  Next, ViFi builds an ensemble of HMMs from the alignment and tree using HIPPI~\cite{Nguyen2016_hippi}.  Briefly, a profile HMM is computed on the input MSA.  Next, the ML tree is partitioned into two subtrees by taking its centroid edge (i.e., the edge that best separates the tree into two subtrees with roughly equal number of leaves).  Profile HMMs are then built on the alignments induced by the leaf set of each of the subtrees.  This process repeats recursively on each subtree until there is at most 10 sequences in the subtree.  This results in a collection of nested hierarchical profile HMMs which we call the ensemble of HMMs.  This pre-processing step of building the ensemble of HMMs only needs to be run once for each viral family of interest.
@@ -98,11 +211,7 @@ We present \textbf{V}irus \textbf{I}ntegration and \textbf{F}usion \textbf{I}den
 %{\label{viral_discovery}  {\bf Viral integration and discovery.}  1) The human genome (represented in blue) has a viral integration event (represented in red).  2) The DNA is extracted and fragmented.  Some fragments will consist of only human DNA, some fragments will consist of viral DNA, and some fragments will be chimeric.  3) The fragments are sequenced via Illumina paired end sequencing technology and mapped to onto a human reference and a viral reference.  3) Depending on which reference(s) the paired end reads map onto, pairs are grouped into four categories: a) human, b) viral, c) chimeric, or d) split.}
 %\end{figure}
 
-\section{Methods}
-We compare ViFi with VERSE~\cite{Wang2015} and ViralFusionSeq~\cite{Li2013} on both simulated and real biological datasets.  We selected VERSE and ViralFusionSeq for comparison as VERSE is among the most recent viral integration tools and has been shown to outperform VirusFinder and VirusSeq, and ViralFusionSeq is the only viral integration tool available on NIH HPC system.  We report the true positive and false positive integration points reported on the simulated datasets, and the true positive integration points reported on biological datasets with experimentally verified integration points.  Finally, we report the number of fusion transcripts detected from the matched RNA-seq datasets, and the number of those transcripts that are supported from the matched WGS datasets.
-
 \subsection{Datasets}
-We benchmarked the different methods on both simulated and on real biological datasets, including two biological datasets with experimentally verified integration points.  The biological datasets included both WGS and RNA-seq datasets. These datasets include simulated WGS of genomes containing integrated HPV, WGS from HCC samples taken from patients with HBV~\cite{Sung2012}, RNA-seq datasets from HCC cell lines infected with HBV~\cite{Lau2014}, matched WGS data from normal and tumor cervical samples taken from the The Cancer Genome Atlas (TCGA).  Details for each of the datasets is provided below, and a summary is provided in Table~\ref{table:data}.
 
 \subsubsection{HPV simulated WGS datasets (HPV-Sim)}
 We simulated 16 human genomes with HPV integrations.  In order to examine the impact of viral sequence divergence on integration detection, we simulated different strains of HPV by evolving HPV16 down a phylogenetic tree with differing branch lengths.  We grouped the simulations into three categories, depending on the integrating virus strain's similarity to the reference HPV16 strain: easy (99\% similarity), medium (95\% similarity), and hard (90\% similarity).  In addition, we generated one additional dataset with Alouatta guariba papillomavirus 1 (AgPV1), a papillomavirus genome not included in the set of viral reference genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16 and is 65\% similar to the most closely related sequence in the set of reference genomes.
@@ -112,10 +221,10 @@ We simulated 16 human genomes with HPV integrations.  In order to examine the im
 88 HCC samples (81 HBV-positive and 7 HBV-negative; both tumor and adjacent tissue) were sequenced by Sung et al.~\cite{Sung2012}.  The authors identified recurrent breakpoints (4 or more samples) in known oncogenes/oncogeneic regions (FN1, TERT, MLL4, CCNE1, ROCK1, SENP5).  A total of 399 breakpoints were identified across the 88 samples.  To confirm recurrent breakpoints, the authors randomly selected 32 breakpoints in six affected genes from 21 samples and validated 22 of these (72\%) via PCR.  Our study used the same 21 samples in our comparison.
 
 \subsubsection{HCC Lau 2014 cell line RNA-seq dataset (HCC-RNAseq)}
-Whole transcriptomes from four HCC cell lines were analyzed using RNA-seq~\cite{Lau2014}.  11 chimeric HBV-human fusion transcripts in three of the cell lines were detected and validated using Sanger sequencing.  Our study used the original six cell line sequencing data.  
+Whole transcriptomes from four HCC cell lines were analyzed using RNA-seq~\cite{Lau2014}.  11 chimeric HBV-human fusion transcripts in three of the cell lines were detected and validated using Sanger sequencing.  Our study included the original six cell line RNA-seq data.  
 
 \subsubsection{TCGA Cervical cancer datasets (TCGA-CESC)}
-We found 68  patient cervical tumor samples in the TCGA database~\cite{TODO} with matched WGS and RNA-seq tumor sequencing data.  Of the 68 samples, 28 samples overlapped with the Tang et al. study~\cite{Tang2013} which examined the landscape of mRNA viral fusion events across the TCGA dataset.  
+We found 68  patient cervical tumor samples in the TCGA database~\cite{TODO} with matched WGS and RNA-seq tumor sequencing data.  Of the 68 samples, 28 samples overlapped with the Tang et al. study~\cite{Tang2013} which examined the landscape of mRNA viral fusion events across the TCGA dataset.  Our study includes a comparison of ViFi and VERSE to the results of the Tang study on the 28 samples, as well as analyses on all 68 samples.
 
 
 \begin{table*}[htb]
@@ -124,136 +233,14 @@ We found 68  patient cervical tumor samples in the TCGA database~\cite{TODO} wit
 \label{table:data}
 \begin{tabular}{|l|l|l|r|r|}
 \hline
-Dataset name & Type & Simulated/Biology & Number of samples & Source \\ \hline
+Dataset name & Type & Source & Number of samples & Source \\ \hline
 HPV-Sim & WGS &Simulated& 16 & Generated for this study \\ \hline
-HCC-WGS & WGS & Experimental&20 & ~\cite{Sung2012} \\ \hline
-HCC-RNAseq & RNA-seq & Experimental&6 & ~\cite{Lau2014} \\ \hline
-TCGA-CESC & WGS and RNA-seq &Experimental& 69 & TCGA~\cite{TODO} \\ \hline 
+HCC-WGS & WGS & Biological&20 & ~\cite{Sung2012} \\ \hline
+HCC-RNA & RNA-seq & Biological&6 & ~\cite{Lau2014} \\ \hline
+TCGA-CESC & WGS and RNA-seq &Biological& 68 & TCGA~\cite{TODO} \\ \hline 
 \end{tabular}
 \end{table*}
 \section{Results}
-
-\subsection{HPV-Sim Simulated Datasets}
-We ran all three methods, including ViFi both with and without the HMMs, on the simulated datasets that contained 25 viral integrations per dataset (Fig.~\ref{sim_results}).  All methods were run on a dedicated compute node with 24 CPUs and given 48 hours to complete.  Only ViFi and VERSE completed within the allotted time; ViralFusionSeq failed to complete on any of the datasets.  ViFi required an average wall clock running time of 7 hours and 30 minutes (minimum of hours 13 minutes to maximum of 8 hours and 2 minutes); VERSE required an average of 8 hours and 19 minutes to complete per dataset (minimum of 6 hours and 1 minute to a maximum of 9 hours and 19 minutes).  
-
-Both ViFi (both with and without HMMs) and VERSE have high precision and recall on the easier datasets (95-99\% similarity with HPV16).  However, when the integrated virus has only 90\% similarity to HPV16, VERSE's precision and recall drops by one half.  ViFi, on the other hand, is still able to accurately detect the highly mutated simulated HPV16 sequence.  On the dataset that contains the novel AgPV1 sequence, only ViFi with the HMMs is able to accurately detect integration events (88\% recall and 93\% precision).  ViFi without the HMMs is only able to detect 20\% of the integrations, but with high precision.  VERSE is unable to detect any integration events.  
-
-Interestingly, VERSE takes significantly longer when it can detect more integrations.  When no integrations are detected, it takes roughly 6 hours to complete, however, this time jumps by two to three hours when it detects 20 or more integrations.  This made VERSE impossible to complete on any of the datasets with 1000 integrations.  ViFi, on the other hand, had an average increase of running time of 32 minutes when increasing the number of simulated viral integrations from 25 to 1000 integrations, without any loss of recall or precision (Fig. S1).
-
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{{results/simulation.main}.pdf}\\
-\caption[Precision-recall on simulated datasets.]
-{\label{sim_results}  {\bf Precision-recall on simulated datasets.}  We report the recall and precision for four different model conditions.  We show results for when we include the usage of the  ensemble of HMMs in detecting viral reads (Default) and when we exclude the usage of the ensemble of HMMs (Default-NoHMMs).  The first three model conditions (easy, medium, and hard) vary the percent similarity of simulated HPV16 genomes to the reference HPV16 genome, with five replicates per simulation.  The last model condition uses Alouatta guariba papillomavirus 1 (AgPV1), an HPV genome not included in the set of viral genomes to simulate detection of a novel HPV virus.  AgPV1 is 44\% similar to HPV16.  There are 25 simulated integrations per dataset.  VERSE failed to detect any viruses on the AgPV1 model condition.  All datasets were simulated with 25x coverage.}
-\end{figure}
-
-
-\subsection{HCC-WGS and HCC-RNAseq datasets}
-Of the 21 experimentally verified integration points in the HCC-WGS dataset, ViFi was able to detect 17 of the integration points, and VERSE was able to detect 16.  In the HCC-RNAseq datasets, both ViFi and VERSE both recovered 10 out of 11 verified fusion mRNA points.
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{results/hcc.pdf}\\
-\caption[Recovery of experimentally verified integration sites from biological datasets.]
-{\label{bio_results}  {\bf Recovery of experimentally verified integration sites.}  We report the number of experimentally verified integration sites recovered from biological datasets for our method and VERSE.  The datasets include the HCC WGS dataset from the Sung et al. 2012 study (21 experimentally validated integration sites) and the HCC RNAseq cell line dataset from the Lau et al. 2014 study (11 experimentally validated integration sites).}
-\end{figure}
-
-
-\subsection{TCGA-CESC comparison study}
-We compared fusion mRNA events detected by ViFi and VERSE to the results reported in the Tang et al. study~\cite{Tang2013} on 28 TCGA-CESC samples.  For each sample, we ran ViFi on the WGS data to detect viral integrations.  For each viral integration reported by ViFi, we report whether or not each of the three methods also found one or more fusion mRNA events within a 100kb interval around that integration point.  In any case in which VERSE or the Tang study found a fusion mRNA event, ViFi also found that event (Fig.~\ref{venn_diagram}).  In addition, ViFi found five fusion mRNA events that was also supported supported by the WGS data that neither VERSE or the Tang study identified.  Closer inspection of these events show strong evidence that these fusion mRNA sequences are real events that were missed by VERSE and the original Tang et al. 2013 study (Fig. S2).
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{results/tcga_triple.pdf}\\
-\caption[Venn diagram of fusion reads recovered from the RNAseq data from Larsson 2013 study]
-{\label{venn_diagram}  {\bf Venn diagram of fusion read integration points recovered from the TCGA-CESC samples with matched RNA-Seq and WGS sequencing.}  We show a Venn diagram of the overlap of the WGS integration points with a matching mRNA event within 100kb reported by ViFi, VERSE, and the Tang et al. 2013 study on the TCGA-CESC samples with both RNA-Seq and WGS sequencing matched pair data.  }
-\end{figure}
-
-\subsection{TCGA-CESC results}
-We applied ViFi to 68 cervical cancer samples with matched WGS and RNA-seq data.  We found integrations in 51 samples (226 integrations total), of which 49 contained fusion mRNA sequences (392 fusion mRNA sequences total).  While a few of the fusion mRNA breakpoints were found within close proximity of the genomic integration breakpoint (27\% were within 100 bps), the majority were more than 1000 bps away (66\%).  This suggests that the majority of the fusion reads have undergone some splicing event.
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{results/{wgs.rna.histogram.distances}.pdf}\\
-\caption[Distance of fusion mRNA breakpoint to nearest WGS integration breakpoint.]
-{\label{distance_breakpoint}  {\bf Histogram of distance of fusion mRNA breakpoint to nearest WGS integration breakpoint.}  }
-\end{figure}
-
-We applied ViFi to 68 cervical cancer samples with matched WGS and RNA-Seq data.  We found integrations in 51 samples, of which 49 contained fusion mRNA sequences.  Importantly, genomic segments with integrations had increased expression of nearby human mRNA (2.5 fold increase), with significantly higher expression when human-viral fusion mRNA are present (5.5 fold increase).  Surprisingly, we found that integration also results in the expression of proximal LTR and LINE elements (3.5 to 5.3 fold increased expression when fusion mRNA is present).   Guided by previous results that implicate fusion HBV-LINE1 with increased tumor susceptibility in HCC (Lau et al. Cancer Cell 2014), our findings highlight the need to explore the roles of LINE and LTR elements in HPV pathogenesis in cervical cancer.  suggest a novel mechanism of HPV pathogenesis in cervical cancer.
-
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{{results/expected.counts}.pdf}\\
-\caption[Annotations of integrated regions.]
-{\label{integration_counts}  {\bf Annotations of integrated regions.}  We report the number of annotations within a 10kb interval of each integration.  We also report the expected integrations from 1000 simulated experiments over the same interval.  The p-values of the observed integration counts (Z-test)  are: LINE < 6e-03;	LTR < 3e-04;  Gene < 3e-04; and	Oncogenes < 0.098.}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{{results/expression.summary.barplot}.pdf}\\
-\caption[Expression of mRNA transcripts in genomic segments with and without integrations.]
-{\label{expression_transcripts}  {\bf Expression of mRNA transcripts in genomic segments with and without integrations.}  We report the mean FPKM expression of annotated features in genomic segments with and without integrations.  For a given integration in a sample, we select a 10kb flanking region around the integration site.  We then report the expression level in samples that have an integration in this region and samples that do not.  In addition, we report the expression level randomly selected segments as a baseline. The p-values for the paired Wilcoxon signed rank test of the difference in FPKM expression for genomic segments with and mean FPKM expression in segments without integrations are: LINE < 1e-12;	LTR < 1e-10;  Gene < 1e-10; and	Oncogenes < NA.}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{{results/rna_direction.summary.histogram}.pdf}\\
-\caption[Fusion reads supp.]
-{\label{mrna_directions}  {\bf Orientation of the mRNA fusion transcripts.}  We report orientation of the fusion mRNA sequences and support for the orientation.  Orientation is inferred from the paired end reads under the assumption that the viral read is always oriented in the direction of the viral genome, and support for the orientation is computed as the proportion of paired end reads supporting that orientation.  In addition, we report whether there is a gene within 10kb of the fusion mRNA read.}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=1\linewidth]{{results/updown}.pdf}\\
-\caption[Fusion reads supp.]
-{\label{updown}  {\bf Average log-fold expression change around integration point.}  We report the average log-fold expression change around an integration point.  The position is reported relative to the integration point in the human genome.  We separate out the segments into four categories, based upon the orientation of the fusion mRNA reads within the genomic interval.   Orientation is determined when at least 75\% of the the paired end reads supporting a fusion mRNA have the same orientation, otherwise it is listed as unable to be determined.  Finally, some segments do not contain fusion mRNAs and are shown separately.}
-\end{figure}
-
-
-%\begin{table*}[htb]
-%\centering
-%\caption{Simulated datasets. Results on the simulated model conditions.  We report the recall and precision for each method across various model conditions.  The model conditions vary by the amount of evolution between the HPV16 strains and the reference HPV16 strain.  Easy conditions contain HPV16 strains with 99\% similarity to the reference, medium with 95\% similarity, and hard with 90\% similarity.  Methods that failed to complete are marked on the table.  VERSE failed to complete on the last step of integration detection, but we were able to recover the list of suspected integrations from the log file; we scored these results but mark them with an asterisk to denote that the values would change had VERSE been able to run to completion. }
-%\label{simulation}
-%\begin{tabular}{|l|r|r|r|r|r|r|}
-%\hline
-%Model Condition        & Total True Sites & ViralHMM      & ViralHMM\_mod  & Viraj            & VERSE            & ViralSeqFus      \\ \hline
-%                       &                    & Recall/Precision  & Recall/Precision & Recall/Precision & Recall/Precision & Recall/Precision \\ \hline
-%Easy HPV16 strain 13  & 987                 & 0.977/0.867   & 0.974/0.971      &  0.973/0.965               & 0.675/0.420$^*$           & 0.562/NA$^*$          \\ \hline
-%Easy HPV16 strain 15  & 990                 & 0.970/0.912   &  0.977/0.988      &  Running               & Runinng           & Runinng         \\ \hline
-%Easy HPV16 strain 17  & 990                 & 0.970/0.874   &  0.977/0.978      &  Running               & Runinng          & Runinng          \\ \hline
-%Medium HPV16 strain 38  &     985          & 0.974/0.920    &  0.971/0.974      &  0.970/0.964         & 0.667/0.649$^*$           & 0.295/NA$^*$          \\ \hline
-%%Medium HPV16 strain 75   &   985          & 0.662/0.836    &        &                  & Failed          & Running          \\ \hline
-%%Medium HPV16 strain 77   &   983       & 0.623/0.808       &        &                  & Failed          & Running          \\ \hline
-%Hard HPV16 strain 65 & 992                 & 0.960/0.881   &   0.961/0.978     &                  & Runinng          & Running          \\ \hline
-%Hard HPV16 strain 123 & 983                 & 0.949/0.887   &   0.973/0.969     & 0.972/0.970                 & Failed          & 0.103/NA$^*$          \\ \hline
-%Hard HPV16 strain 125 & 979             & 0.942/0.875       &   0.971/0.966     & 0.962/0.967                 & Failed          & 0.127/NA$^*$          \\ \hline
-%
-%\end{tabular}
-%\end{table*}
-
-%\subsection{RNA-seq cell line datasets}
-%\begin{table*}[]
-%\centering
-%\caption{HCC Cell-line RNA-seq data.  RNA-seq data from four cell lines with experimentally verified fusion transcripts.}
-%\label{rnaseq_hcc_cellline}
-%\begin{tabular}{|l|l|l|l|l|l|}
-%\hline
-%Sample  & Span position (Orientation) in human genome                                                                                                 & Viral-HMM & Viraj & Virus-Finder 2 & ViralSeqFus \\ \hline
-%HKCI-4  & chr4:54908780-54915241(+)                                                                                                                   & Yes       & Yes      & Yes            &        Running     \\ \hline
-%        & chr5:1295559-1295834 (+)                                                                                                                    & Yes       &    Yes   & Yes            &           Running  \\ \hline
-%        & chr8:41493923-41494204 (+)                                                                                                                  & Yes       &    Yes   & Yes            &           Running  \\ \hline
-%        & chr13:115070262-115070459 (+)                                                                                                               & Yes       &   Yes    & Yes            &          Running   \\ \hline
-%        &chr9:129733666-129733820 (+) & Yes       &   Yes    & No             &          Running   \\ \hline
-%HKCI-5B & chr7:98532127-98532327 (+)                                                           & Yes       &  Yes     & Yes            &       Running    \\ \hline
-%        & chr16:30408209-30408356 (+)                                                                                                                 & Yes       &   Yes    & Yes            &          Yes   \\ \hline
-%HKCI-7  & chr4:99949575-99949439 (-)                                                                                                                  & Yes       &   Yes    & Yes            &          Running   \\ \hline
-%        & chr11:68887645-68887577 (-)                                                                                                                 & Yes       &   Yes    & Yes            &         Running    \\ \hline
-%        & chr11:14159090-14159048 (-)                                                                                                                 & No        &   No    & No             &        Running     \\ \hline
-%HKCI-11 & chr4:53063790-53063967 (+)                                                                                                                  & Yes       &  Yes     & Yes            &       Running      \\ \hline
-%\end{tabular}
-%\end{table*}
 
 %\subsection{HCC WGS patient results}
 %Of the 22 experimentally verified integration points, Viral-HMM was able to detect 21 of the points, VERSE 8 of the points, and ...  Note that in the VERSE paper, the authors reported that they were able to detect 16 out of the 22 points.  We had difficulties in running VERSE on our samples, and tools used within the VERSE pipeline produced very large uncompressed SAM files (up to 1.2 TB in size).  We attempted to fix this by having VERSE output compressed BAM files, which allowed several of the failed runs to complete, but not all.  We suspect that with more efficient use of piping, VERSE could avoid producing many of the large files and would be able to complete on our system and potentially achieve the results reported in their paper.
@@ -289,65 +276,15 @@ We applied ViFi to 68 cervical cancer samples with matched WGS and RNA-Seq data.
 %95T    & chr19: 36212564                         & Y         &       & Y                                    & Running    \\\hline
 %\end{tabular}
 %\end{table*}
-
-%\subsection{HCC TCGA matched paired samples}
-%We ran Viral-HMM on TCGA-LIHC patient samples in which there existed both WGS from tumor and normal blood samples, and RNA-seq of tumor samples.  
-%
-%TODO:  Graph coverage near/at integration sites, graph hotspots
-%\begin{figure}[htpb]
-%  \centering
-%  \includegraphics[width=1\linewidth]{results/TCGA-BW-A5NP.png}\\
-%\caption[Integration sites recovered from patient TCGA-BW-A5NP.]
-%{\label{TCGA-BW-A5NP}  {\bf Integration sites recovered from patient TCGA-BW-A5NP.}  Blue lines represent integrations found from the WGS data.  Red lines represent integrations found from the RNA-Seq data.}
-%\end{figure}
-%
-%\begin{figure}[htpb]
-%  \centering
-%  \includegraphics[width=1\linewidth]{results/TCGA-CC-5262.png}\\
-%\caption[Integration sites recovered from patient TCGA-CC-5262.]
-%{\label{TCGA-CC-5262}  {\bf Integration sites recovered from patient TCGA-CC-5262.}  Blue lines represent integrations found from the WGS data.  Red lines represent integrations found from the RNA-Seq data.}
-%\end{figure}
-%
-%\begin{figure}[htpb]
-%  \centering
-%  \includegraphics[width=1\linewidth]{results/TCGA-CC-A1HT.png}\\
-%\caption[Integration sites recovered from patient TCGA-CC-A1HT.]
-%{\label{TCGA-CC-A1HT}  {\bf Integration sites recovered from patient TCGA-CC-A1HT.}  Blue lines represent integrations found from the WGS data.  Red lines represent integrations found from the RNA-Seq data.}
-%\end{figure}
-
-
-\section{Discussion}
-
-\section{Conclusion}
+\section{Data Access}
 
 \section*{Acknowledgements}
 The results published here are in whole or part based upon data generated by the TCGA Research Network: \href{http://cancergenome.nih.gov/}.
 
-%\section{Notes}
-%
-%Need to focus on flanking regions of 25kb in paper.
-%
-%
-%[1] M. Kadaja, A. Sumerina, T. Verst, M. Ojarand, E. Ustav, and M. Ustav, “Genomic instability of the host cell induced by the human papillomavirus replication machinery.,” EMBO J., vol. 26, no. 8, pp. 2180–91, 2007.
-%
-%E1 protein is replicon origin recognition factor and viral helicase, which with E2, helps recruit(?) host cell replication complexes onto the HPV origin.  High E1 result in high recruitment of host replication complex at virus origin site.
-%
-%Flanking DNA can be amplified, up to 12kb, with total amplicon size 25kb.  The amplification locus could be a target for genomic re-arrangments due to recruitment of DDR mechanisms.  In addition, onion-skin model of replication cuz breaks, fragments
 
-%[1] M. Kadaja, H. Isok-Paas, T. Laos, E. Ustav, and M. Ustav, “Mechanism of genomic instability in cells infected with the high-risk human papillomaviruses,” PLoS Pathog., vol. 5, no. 4, 2009.
-%
-%
-%
-%[1] Z. Jiang, S. Jhunjhunwala, J. Liu, P. M. Haverty, M. I. Kennemer, Y. Guan, W. Lee, P. Carnevali, J. Stinson, S. Johnson, J. Diao, S. Yeung, A. Jubb, W. Ye, T. D. Wu, S. B. Kapadia, F. J. De Sauvage, R. C. Gentleman, H. M. Stern, S. Seshagiri, K. P. Pant, Z. Modrusan, D. G. Ballinger, and Z. Zhang, “The effects of hepatitis B virus integration into the genomes of hepatocellular carcinoma patients The effects of hepatitis B virus integration into the genomes of hepatocellular carcinoma patients,” pp. 593–601, 2012.
-
-%Runthrough for HBV, directional, need to make a clear graph
-%\section{Cell lines}
-%HPV16-positive W12 cell line both viral and integrated HPV genomes in early stages, lost of plasmids in later stages
-
-\section*{Funding}
-
-\section*{Disclosures}
+\section*{Disclosure Declaration}
 VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells computational tools for analyzing mass spectrometry data. The terms of this arrangement have been reviewed and approved by the University of California, San Diego in accordance with its conflict of interest policies. DP was not involved in the research presented here
+
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
 %\bibliographystyle{plainnat}
@@ -358,10 +295,65 @@ VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells comput
 %
 %\bibliography{Document}
 
-\bibliographystyle{natbib}
+\bibliographystyle{genres}
 \bibliography{main}
 \end{document}
 
 
+\section{Notes}
+
+[1] N. Wentzensen, J. F. Coy, H. P. Knaebel, M. Linnebacher, B. Wilz, J. Gebert, and M. Von Knebel Doeberitz, “Expression of an endogenous retroviral sequence from the HERV-H group in gastrointestinal cancers,” Int. J. Cancer, vol. 121, no. 7, pp. 1417–1423, 2007.
+
+Higher expression of HERV-H group in some cancers, not high in normal     
+
+[1] M. T. Romanish, C. J. Cohen, and D. L. Mager, “Potential mechanisms of endogenous retroviral-mediated genomic instability in human cancer,” Semin. Cancer Biol., vol. 20, no. 4, pp. 246–253, 2010.
+
+LTR and non-LTR not active, blocked by methalyation.  when meth. mech removed, the HERV become active.  
+
+[1] A. Babaian and D. L. Mager, “Endogenous retroviral promoter exaptation in human cancer,” Mob. DNA, vol. 7, no. 1, p. 24, 2016.
+
+LTR
+Among them, pol is most conserved. Inside pol there are three important domains: IN(integrase), RT(reverse transcriptase) and RH(RNase H), which are enzymes for reverse transcription and insertion. RT and IN are regarded essential for autonomous LTR elements to fulfill their function.
+
+LTR
+no human LTRs transcriptionally active
+
+Full length L1 have 2 internal promoters at 5' end, sense drives expression of element, antisense control transcription of nearby genes by forming chimeric transcripts, antisense promoter also express ORF0, which plays regulatory role in retrotransposition
+
+500K L1, but only 3500-700 are full-length, retaining promoters
 
 
+
+
+[1] M. Kadaja, A. Sumerina, T. Verst, M. Ojarand, E. Ustav, and M. Ustav, “Genomic instability of the host cell induced by the human papillomavirus replication machinery.,” EMBO J., vol. 26, no. 8, pp. 2180–91, 2007.
+
+E1 protein is replicon origin recognition factor and viral helicase, which with E2, helps recruit(?) host cell replication complexes onto the HPV origin.  High E1 result in high recruitment of host replication complex at virus origin site.
+
+Flanking DNA can be amplified, up to 12kb, with total amplicon size 25kb.  The amplification locus could be a target for genomic re-arrangments due to recruitment of DDR mechanisms.  In addition, onion-skin model of replication cuz breaks, fragments
+
+[1] M. Kadaja, H. Isok-Paas, T. Laos, E. Ustav, and M. Ustav, “Mechanism of genomic instability in cells infected with the high-risk human papillomaviruses,” PLoS Pathog., vol. 5, no. 4, 2009.
+
+
+
+[1] Z. Jiang, S. Jhunjhunwala, J. Liu, P. M. Haverty, M. I. Kennemer, Y. Guan, W. Lee, P. Carnevali, J. Stinson, S. Johnson, J. Diao, S. Yeung, A. Jubb, W. Ye, T. D. Wu, S. B. Kapadia, F. J. De Sauvage, R. C. Gentleman, H. M. Stern, S. Seshagiri, K. P. Pant, Z. Modrusan, D. G. Ballinger, and Z. Zhang, “The effects of hepatitis B virus integration into the genomes of hepatocellular carcinoma patients The effects of hepatitis B virus integration into the genomes of hepatocellular carcinoma patients,” pp. 593–601, 2012.
+
+Runthrough for HBV, directional, need to make a clear graph
+\section{Cell lines}
+HPV16-positive W12 cell line both viral and integrated HPV genomes in early stages, lost of plasmids in later stages
+
+
+%We examined the mean Fragments Per Kilobase of transcript per Million (FPKM) of genomic regions within 10kb of an integration compared to the mean FPKM of segments of samples without an integration in that region (Fig.~\ref{expression_transcripts}).  Genomic segments with integrations had increased expression of nearby human mRNA (2.5 fold increase), with significantly higher expression when human-viral fusion mRNA are present (5.5 fold increase).  Surprisingly, we found that integration also results in the expression of proximal LTR and LINE elements (3.5 to 5.3 fold increased expression when fusion mRNA is present).  
+
+
+%and they have been implicated as causes in oncogenesis~\cite{Rodic2013,Xiao-Jie2016}.  While L1 elements are typically epigenetically repressed in  in germ and somatic cells,  , though this process is still poorly understood.  The integration process can create breaks in the host cell  genome, and it is hypothesized that and requires DNA repair mechanism to~\cite{Gasior2006,Rodic2013,Xiao-Jie2016}  
+%
+%LINE-1~\cite{Gasior2006}, and LINE L1 activity has been implicated in causing genomic instability and cancer~\cite{Rodic2013,Xiao-Jie2016}. 
+%
+%
+%Hu et al. 2015 suggested that HPV may integrate randomly across the genome until an integration occurs in a region that provides a proliferation advantage and results in oncogenesis.  Thus, it's unsurprising to find that common regions with recurrent integrations are in or near known oncogenes. 
+%
+%~\cite{Tang2013,Hu2015}, and the second is identifying up-regulated or down-regulated host and viral genes resulting from integration~\cite{Tang2013}.  
+%
+% has highlighted genomic hotspots for integration, including known oncogenes such as MYC, PVT1, ERBB2, RAD51~\cite{Tang2013}, however, the vast majority of integrations are non-recurrent.  Hu et al. 2015 suggested that HPV may integrate randomly across the genome until an integration occurs in a region that provides a proliferation advantage and results in oncogenesis.  Thus, it's unsurprising to find that common regions with recurrent integrations are in or near known oncogenes.  
+%
+%Other research 
