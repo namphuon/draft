@@ -1,43 +1,94 @@
-\documentclass{bioinfo}
+\documentclass[12pt]{article}
 \usepackage{multirow}
+\usepackage{hyperref}
 \usepackage{xr}
 \usepackage[export]{adjustbox}
 \usepackage{float}
 \usepackage[caption = false]{subfig}
 \usepackage{graphicx}
 
-\copyrightyear{2017} \pubyear{2017}
-
-\access{Advance Access Publication Date: Day Month Year}
-\appnotes{Manuscript Category}
-
 \externaldocument{supplement}
 
-\begin{document}
-\firstpage{1}
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
 
-\subtitle{Subject Section}
 
-%\title[Pipe]{Pipe: Pipeline for detecting viral integration from Next Generation Sequencing data}
-\title[ViFi]{ViFi: Viral integration and mRNA fusion identification}
-\author[Nguyen \textit{et~al}.]{Nam-phuong Nguyen\,$^{\text{\sfb 1}}$, Viraj Deshpande, 
-Jens Luebeck\,$^{\text{\sfb 1}}$ and Vineet Bafna\,$^{\text{\sfb 1,*}}$}
-\address{$^{\text{\sf 1}}$Computer Science and Engineering, University of California, San Diego, La Jolla, 92093, USA.}
+%The next command sets up an environment for the abstract to your paper.
 
-\corresp{$^\ast$To whom correspondence should be addressed.}
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
 
-\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
 
-\editor{Associate Editor: XXXXXXX}
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
 
-\abstract{\textbf{Motivation:}  An estimated 12\% of all human cancers are caused by oncoviruses (i.e., a virus linked to cancer), with more than 80\% of the cases occurring in developing nations.  In cancers such as cervical cancer and hepatocellular carcinoma, the integration of the viral genome into the host cell's genome is an important factor tumor genesis.  The standard approaches to viral integration detection identify paired end reads that map to both the human and viral references.  However, read-based reference mapping can have difficulty identifying integration sites from fast evolving viruses or from novel viruses.\\
-\textbf{Results:} We present ViFi, a viral integration detection tool that uses both reference-based read mapping and a phylogenetic-based approach to identify viral reads.  Key to this framework is the use of profile Hidden Markov models used to represent the viral family of interest, allowing the detecting of highly mutated or novel viral sequences belonging to that family.  In addition, ViFi use mappability scores to reduce false positive detections.  ViFi can be run on both WGS and RNA-seq data, allowing for both the detection of integration sites and fusion transcripts.  We compare Viral-HMM to VERSE and VirusFusionSeq on both simulated NGS data and real biological data with experimentally verified integration sites.  Our results show that ViFi is more sensitive in detecting integration sites, while also having a lower false positive detection rate.\\
-\textbf{Availability:} ViFi is availble on github at ...\\
-\textbf{Contact:} \href{ndn006@eng.ucsd.edu}{ndn006@eng.ucsd.edu}\\
-\textbf{Supplementary information:} Supplementary data are available at \textit{Bioinformatics}
-online.}
+\renewcommand\refname{References and Notes}
 
-\maketitle
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
+
+\title{ViFi: Viral integration and mRNA fusion identification} 
+
+
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
+
+\author
+{Nam-phuong Nguyen\,$^{1}$, Viraj Deshpande, 
+Jens Luebeck\,$^{1}$ and Vineet Bafna\,$^{1\ast}$\\
+\\
+\normalsize{$^{1}$Computer Science and Engineering, University of California,}\\
+\normalsize{San Diego, La Jolla, 92093, USA.,}\\
+\normalsize{$^\ast$To whom correspondence should be addressed; E-mail:  vbafna@eng.ucsd.edu.}
+}
+
+% Include the date command, but leave its argument blank.
+
+\date{}
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document} 
+
+% Double-space the manuscript.
+
+\baselineskip24pt
+
+% Make the title.
+
+\maketitle 
+
+% Place your abstract within the special {sciabstract} environment.
+
+\begin{sciabstract}
+  An estimated 12\% of all human cancers are caused by oncoviruses (i.e., a virus linked to cancer), with more than 80\% of the cases occurring in developing nations.  In cancers such as cervical cancer and hepatocellular carcinoma, the integration of the viral genome into the host cell's genome is an important factor tumor genesis.  The standard approaches to viral integration detection identify paired end reads that map to both the human and viral references.  However, read-based reference mapping can have difficulty identifying integration sites from fast evolving viruses or from novel viruses.  We present ViFi, a viral integration detection tool that uses both reference-based read mapping and a phylogenetic-based approach to identify viral reads.  Key to this framework is the use of profile Hidden Markov models used to represent the viral family of interest, allowing the detecting of highly mutated or novel viral sequences belonging to that family.  In addition, ViFi use mappability scores to reduce false positive detections.  ViFi can be run on both WGS and RNA-seq data, allowing for both the detection of integration sites and fusion transcripts.  We compare Viral-HMM to VERSE and VirusFusionSeq on both simulated NGS data and real biological data with experimentally verified integration sites.  Our results show that ViFi is more sensitive in detecting integration sites, while also having a lower false positive detection rate.
+\end{sciabstract}
 
 \section{Introduction}
 Viral infection and integration plays key roles in tumorigenesis, however, determining the causative factors has been challenging.  Difficulties include the long latency period between infection and cancer formation (between 15 to 40 years for some cancers), the viruses that cause cancer in some patients often do not cause cancer in many other patients, and some viruses are indirect carcinogens (i.e., viral genes are not present in the tumor cells)~\cite{Hausen2009}.  Additional difficulties in understanding viral-related cancers is that the human cancer viruses span a wide range of virology, including retroviruses, positive-stranded RNA viruses, and small and large DNA viruses.  While these groups of viruses have different cellular targets and different methods for proliferation, one key insight is that some of these viruses (Human papillomavirus (HPV), Molluscum contagiosum virus (MCV), Hepatitis B virus (HBV), and Human T-lymphotropic virus (HTLV)) have mechanisms for integrating directly into the host genome, and these viruses are clonal within individual tumors cells, suggesting that integration may lead to cellular proliferation and cancer formation~\cite{Moore2010}.
@@ -134,12 +185,12 @@ For each fusion mRNA sequence, we examine the number of paired end chimeric read
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=1\linewidth]{{results/expression.summary.barplot}.pdf}\\
+  \includegraphics[width=1\linewidth]{{results/expression.summary.barplot.fold}.pdf}\\
 \caption[Expression of mRNA transcripts in genomic segments with and without integrations.]
 {\label{expression_transcripts}  {\bf Log2 fold change in expression of mRNA transcripts in genomic segments with and without integrations.}  We report the Log2 fold change in expression of annotated features in genomic segments with and without integrations, both for integrations with and without fusion mRNA sequences.  For a given integration in a sample, we select a 10kb flanking region around the integration site.  We then report the expression level in samples that have an integration in this region and samples that do not.}
 \end{figure}
 
-The impact of integration on expression is most prominent downstream from the integration site~\cite{updown}.  For each integration with a fusion mRNA sequence, we identify the human strand that contains the positive viral genome and examine the expression upstream and downstream in a 10kb interval around the integration point.  In some cases, there were multiple integration points within the 10kb interval, or we were unable to determine which human strand contains the positive viral genome.  The first observation is when there is a fusion mRNA present in the interval, the increase in expression is most prominent downstream of the integration point.  In general, there is typically two- to four-fold increase in expression when fusion mRNA is present.  Finally, integrations without any fusion mRNA sequences show no change in expression.
+The impact of integration on expression is most prominent downstream from the integration site (Fig.~\ref{updown}).  For each integration with a fusion mRNA sequence, we identify the human strand that contains the positive viral genome and examine the expression upstream and downstream in a 10kb interval around the integration point.  In some cases, there were multiple integration points within the 10kb interval, or we were unable to determine which human strand contains the positive viral genome.  The first observation is when there is a fusion mRNA present in the interval, the increase in expression is most prominent downstream of the integration point.  In general, there is typically two- to four-fold increase in expression when fusion mRNA is present.  Finally, integrations without any fusion mRNA sequences show no change in expression.
 
 \begin{figure}[htpb]
   \centering
@@ -155,16 +206,11 @@ Previous research on the role of viral integration on tumorgenesis focused on id
 
 Our results show that viral integration not only can result in fusion human-viral mRNA sequences, but also a large increase in transcription, especially when fusion mRNA sequences are present.  We hypothesize that this increase is a result of recruitment of transcription factors by the HPV's upstream regulatory region (URR) and subsequent transcription read-through to produce both viral-human mRNA transcripts as well as an uptick of expression downstream from the viral integration point.  When there are no fusion mRNA transcripts present, it is possible that the integrated genome is unable to recruit transcript factors because the URR  has been disrupted.  Thus, we do not observe the same increase in expression for integrations without fusion mRNA sequences.
 
-Our results suggests another potential mechanism for viral-related oncogenesis: genomic instability and pathway disruption via expression of LINE and LTR elements that are not normally expression via transcription read-through.  LINE-1 (L1) elements are retrotransposons that have a "cut and paste" mechanism which allows it to replicate itself through RNA intermediates and re-insert itself back into the genome in DNA.  L1 elements have been shown to create double stranded breaks in the host cell genome, which might lead to genomic instability~\cite{Gasior2006}.  L1 elements are typically epigenetically repressed in somatic cells~\cite{Kinomoto2007,Sigurdsson2012}, they have been shown to be active in selected neoplasms~\cite{Rodic2013,Xiao-Jie2016}.  Interestingly, the \emph{p53} gene will often activate the apoptotic pathway when an L1 re-integrates into the genome, however, this can be blocked by the HPV E6 protein~\cite{Haoudi2004}.  LTRs can act as promoters, enhancers, and transcriptional factor-binding sites, and can potentially be transcriptionally active, depending on the tissue~\cite{Yu2013}.  In most cases, LTRs are transcriptionally silenced by epigenetic mechanisms, however, in cancer, LTRs have been shown to have up-regulated expression (see~\cite{Romanish2010} for a review).  Our results show more than an order of magnitude fold increase in expression of these elements in regions proximal to integration sites.
+Our results suggests another potential mechanism for viral-related oncogenesis: genomic instability and pathway disruption via expression of LINE and LTR elements that are not normally expression via transcription read-through.  LINE-1 (L1) elements are retrotransposons that have a "cut and paste" mechanism which allows it to replicate itself through RNA intermediates and re-insert itself back into the genome in DNA.  L1 elements have been shown to create double stranded breaks in the host cell genome, which might lead to genomic instability~\cite{Gasior2006}.  L1 elements are typically epigenetically repressed in somatic cells~\cite{Kinomoto2007,Sigurdsson2012}, they have been shown to be active in selected neoplasms~\cite{Rodic2013,Xiao-Jie2016}.  Interestingly, the \emph{p53} gene will often activate the apoptotic pathway when an L1 re-integrates into the genome, however, this can be blocked by the HPV E6 protein~\cite{Haoudi2004}.  LTRs can act as promoters, enhancers, and transcriptional factor-binding sites, and can potentially be transcriptionally active, depending on the tissue~\cite{Yu2013}.  In most cases, LTRs are transcriptionally silenced by epigenetic mechanisms, however, in cancer, LTRs have been shown to have up-regulated expression (see~\cite{Romanish2010} for a review).  Our results show more than an order of magnitude fold increase in expression of these elements in regions proximal to integration sites.  As HPV randomly integrates into the genome, it might fall proximal to LINE and LTR elements and result in deregulation of cellular pathways by the active transcription of LINE and LTR elements, and in particular increased genomic instability via production of L1 elements.  
 
-Finally, the production of fusion transcripts might also be 
+The production of fusion transcripts might also play a role in tumor progression.  As previously noted, HBx-LINE1 has been shown to result in increased susceptibility to liver cancer by acting as a sponge for miRNAs~\cite{Lau2014,Liang2016}.  Recent studies for HPV-related cancers have noted differential expression profiles of miRNAs for HPV-positive and HPV-negative samples~\cite{Lajer2012,Gao2016}.  One possibility is that fusion transcripts being produced via integrated HPV might also act as a sponge for miRNA.
 
-  
-
-
-in HBx-LINE1, A fusion transcript between human LINE L1 element and an HBV X gene, has been shown to result in increased susceptibility to liver cancer by acting as a sponge for miRNAs~\cite{Lau2014,Liang2016}.  
-
-
+The impact of viral integration on proximal transcription expression is clear.  Our study highlights the need for more research on the role of HPV integration on oncogenesis, and in particular, focusing on samples with non-recurrent integrations.  As the majority of integrations are non-recurrent, mechanisms such as increased LINE and LTR expressions could play a crucial role in tumor progression and genomic instability.  One possible direction to better understand the role of LINE and LTR expression is combining proteomics and genomics.  In particular, focusing on whether HPV positive samples with integration show higher expression of L1 encoded proteins, ORF1p and ORF2p, compared to HPV positive samples without integration.  
  
 \section{Method}
 \subsection{ViFi}
