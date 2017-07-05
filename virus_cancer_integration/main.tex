@@ -93,7 +93,7 @@ Jens Luebeck$^{2}$, Paul Mischel$^{3}$, and Vineet Bafna$^{1\ast}$\\
 An estimated 12\% of all human cancers are caused by oncoviruses, with more than 80\% of the cases occurring in developing countries.  In cancers such as cervical cancer and hepatocellular carcinoma, the integration of the viral genome into the host cell's genome is an important factor tumorigenesis.  Standard approaches to viral integration detection is identifying paired-end reads mapping to both the human and viral references.  However, read-based reference mapping has difficulty identifying integration sites from rapidly evolving viruses or from novel virus strains.  We present ViFi, a viral integration detection tool which uses both reference-based read mapping and a phylogenetic-based approach to identify viral reads.  Key to this framework is the use of profile Hidden Markov models to represent the viral family of interest, allowing the detection of highly mutated or novel  sequences belonging to a viral family.  In addition, ViFi uses mappability scores to reduce false positive detections.  ViFi can be run on WGS and RNA-seq data, allowing for both the detection of integration sites and fusion transcripts.  We compare Viral-HMM to VERSE and ViralFusionSeq on both simulated NGS data and real biological data with experimentally verified integration sites.  Our results show that ViFi is more sensitive in detecting integration sites and has a lower false positive detection rate.
 \end{sciabstract}
 
-\section{Introduction}
+\section*{Introduction}
 Viral infection and integration plays a key role in tumorigenesis, however, determining the causative factors has been challenging.  Difficulties include the long latency period between infection and cancer formation (between 15 to 40 years for some cancers), the viruses that cause cancer in some patients often do not cause cancer in many other patients, and some viruses are indirect carcinogens (i.e., viral genes are not present in the tumor cells)~\cite{Hausen2009}.  Furthermore the human cancer viruses span across a diverse range of viral families, including retroviruses, positive-stranded RNA viruses, and small and large DNA viruses.  While these viral families have different cellular targets and different methods for proliferation, one key insight is that some of these viruses (Human papillomavirus (HPV), Molluscum contagiosum virus (MCV), Hepatitis B virus (HBV), and Human T-lymphotropic virus (HTLV)) have mechanisms for integrating directly into the host genome, and a tumor sample will show the same integration site throughout the sample, suggesting that integration occurred before clonal expansion of the tumor sample.  This observation suggests that integration may lead to cellular proliferation and cancer formation~\cite{Moore2010}.
 
 Studies of the impact of viral integration on tumorigenesis have found evidence of recurrent genomic hotspots in both HBV-related hepatocellular carcinoma (HCC; ~\cite{Ding2012, Khoury2013}) and HPV-related cervical cancers~\cite{Schmitz2012}.  In these studies recurrent integrations were often found in or near known oncogenes such as TERT, MYC, and MLL4, suggesting that integration occurs randomly across the genomic, however over the course of tumor formation progression, integrations in key genomic regions may provide a selective advantage for the host cells, resulting in recurrent integration sites across different samples.  
@@ -114,7 +114,7 @@ We show a comparison ViFi to competing tools, VERSE and ViralFusionSeq, on both 
 
 %We compare ViFi with VERSE~\cite{Wang2015} and ViralFusionSeq~\cite{Li2013} on both simulated and real biological datasets.  We selected VERSE and ViralFusionSeq for comparison as VERSE is among the most recent viral integration tools and has been shown to outperform VirusFinder and VirusSeq, and ViralFusionSeq is the only viral integration tool available on NIH HPC system.  We report the true positive and false positive integration points reported on the simulated datasets, and the true positive integration points reported on biological datasets with experimentally verified integration points.  Finally, we report the number of fusion transcripts detected from the matched RNA-seq datasets, and the number of those transcripts that are supported from the matched WGS datasets.
 
-\section{Results}
+\section*{Results}
 
 \paragraph{\textbf{Comparison on simulated datasets.}}  We simulated WGS datasets with integrated viruses, exploring the impact of viral strain diversity and number of integrations on detection accuracy and computational running time.  The integrated viruses included three HPV16 strains simulated with either low, medium, or high rates of substitution mutation, and one papillomavirus (AgPV1) that is not included the reference PV database to simulate detection of a novel virus.  The number of integrations varied from 25, 100, 500, and 1000.  For each model condition (parameterized by the integrated virus and number of integrations), we generated five replicate WGS datasets at 25x coverage (approximately 50 GB of data per dataset) for a total of 16 model conditions and 80 datasets.  
 
@@ -216,7 +216,7 @@ The first observation is when there is a fusion mRNA present in the interval (si
 {\label{updown}  {\bf Categorization of integration points and expression change around integration point}.  a) We categorize integration points into three categories: simple integration, complex integration, and no fusion mRNA integration.  Simple integrations have no other integrations within a 10kb window, and at least 75\% of the chimeric paired-end reads supporting a fusion mRNA event are orientated in the same direction.  Complex integrations either have multiple integration events within a 10kb window, have multiple fusion mRNA supporting different orientations, or have chimeric paired-end reads that support conflicting orientations for the same mRNA fusion event.  Integrations that have no fusion mRNA events are categorized in a separate category.  b) We report the average log-fold expression change upstream and downstream of an integration event.  The position is reported relative to the integration point in the human genome, with negative position being upstream of the integration event, and positive position being downstream of the integration event.  The results are separated out by the integration category.  In total, there are 68 simple integrations, 51 complex integrations, and 107 integration events with no fusion mRNA sequences.} %35, 110, 81
 \end{figure}
 
-\section{Discussion}
+\section*{Discussion}
 We present ViFi, a new method for detection of viral integration sites and fusion mRNA sequences.  The key advances of ViFi are the use of eHMMs to better detect evolutionarily divergent viruses and the use of mappability scores to reduce false positive detections.  Our simulation experiments shows that ViFi has high precision and sensitivity in detecting viruses, even under difficult conditions of highly mutated viruses or novel viruses.  VERSE, on the other hand, performs poorly or fails to detect integration on the hardest model conditions.  On the biological datasets, ViFi detects more integration events than VERSE.  ViFi is computationally efficient and its running time is dramatically impacted by increased viral integrations, whereas VERSE is unable to complete analyses within 48 hours on datasets with 1,000 integrations.
 
 Previous research on the role of viral integration on tumorigenesis focused on identifying genomic hotspots containing recurrent integrations and identifying change in both host and viral gene expression resulting from integration~\cite{Tang2013,Lawrence2015,Hu2015,Zhang2016}.  One key observation is that recurrent integrations often occurred near or in known oncogenes such as MYC, PVT1, ERBB2, RAD51~\cite{Tang2013}, but our results show that these are the exception not the norm.  Hu et al. 2015 suggested that HPV integrates randomly across the genome until an integration occurs in a region that provides a proliferative advantage, resulting in oncogenesis.  However, the vast majority of integrations are non-recurrent and the majority of samples do not have integrations in or near oncogenes.  Thus, focusing on genes with recurrent integrations can only explain samples what have integrations in those genes, potentially ignoring a large portion of samples that do not contain integrations in recurrent regions.
@@ -240,7 +240,7 @@ The impact of viral integration on proximal transcription expression is clear.  
 
 %One possible direction to better understand the role of LINE and LTR expression is combining proteomics and genomics.  In particular, focusing on whether HPV positive samples with integration show higher expression of L1 encoded proteins, ORF1p and ORF2p, compared to HPV positive samples without integration.  
  
-\section{Method}
+\section*{Method}
 \paragraph{\textbf{ViFi.}}
 We present \textbf{V}irus \textbf{I}ntegration and \textbf{F}usion \textbf{I}dentification (ViFi), a new pipeline for detection of integration sites (Fig.~\ref{flowchart}).  Unlike other integration detection pipelines that use reference-based alignment mapping for identifying viral reads, ViFi uses a combination of reference-based alignment mapping and ensemble of profile HMMs to identify viral reads.  
 
@@ -314,7 +314,6 @@ HCC-RNA & RNA-seq & Biological&6 & ~\cite{Lau2014} \\ \hline
 TCGA-CESC & WGS and RNA-seq &Biological& 68 & TCGA~\cite{TODO} \\ \hline 
 \end{tabular}
 \end{table*}
-\section{Results}
 
 %\subsection{HCC WGS patient results}
 %Of the 22 experimentally verified integration points, Viral-HMM was able to detect 21 of the points, VERSE 8 of the points, and ...  Note that in the VERSE paper, the authors reported that they were able to detect 16 out of the 22 points.  We had difficulties in running VERSE on our samples, and tools used within the VERSE pipeline produced very large uncompressed SAM files (up to 1.2 TB in size).  We attempted to fix this by having VERSE output compressed BAM files, which allowed several of the failed runs to complete, but not all.  We suspect that with more efficient use of piping, VERSE could avoid producing many of the large files and would be able to complete on our system and potentially achieve the results reported in their paper.
@@ -350,7 +349,7 @@ TCGA-CESC & WGS and RNA-seq &Biological& 68 & TCGA~\cite{TODO} \\ \hline
 %95T    & chr19: 36212564                         & Y         &       & Y                                    & Running    \\\hline
 %\end{tabular}
 %\end{table*}
-\section{Data Access}
+\section*{Data Access}
 
 \section*{Acknowledgements}
 The results published here are in whole or part based upon data generated by the TCGA Research Network: \href{http://cancergenome.nih.gov/}.
@@ -372,7 +371,7 @@ VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells comput
 \bibliographystyle{genres}
 \bibliography{main}
 
-\section{Online supplemental materials}
+\section*{Online supplemental materials}
 \setcounter{figure}{0}
 \renewcommand{\thesection}{S.\arabic{section}}   
 \renewcommand{\thefigure}{S\arabic{figure}}   
@@ -416,7 +415,7 @@ VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells comput
 \end{document}
 
 
-\section{Notes}
+\section*{Notes}
 
 [1] N. Wentzensen, J. F. Coy, H. P. Knaebel, M. Linnebacher, B. Wilz, J. Gebert, and M. Von Knebel Doeberitz, “Expression of an endogenous retroviral sequence from the HERV-H group in gastrointestinal cancers,” Int. J. Cancer, vol. 121, no. 7, pp. 1417–1423, 2007.
 
