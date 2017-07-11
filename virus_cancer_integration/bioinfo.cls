@@ -45,7 +45,7 @@
 \def\helveticacnbolditalic{\fontfamily{phv}\fontseries{bc}\fontshape{sl}\selectfont}
 
 % Not sure if needed.
-\newcommand\@ptsize{0}
+\newcommand\@ptsize{1}
 
 % Set twoside printing
 \@twosidetrue
