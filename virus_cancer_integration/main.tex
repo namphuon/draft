@@ -144,10 +144,10 @@ For each sample, we ran ViFi and VERSE~\textbf{NOTE:Currently running on XSEDE, 
 \paragraph{\textbf{Genome-wide analysis of genomic integrations and fusion mRNA sequences in cervical cancer samples.}}
 Having established the concordance of fusion mRNA and genomic
 integrations on 28 TCGA-CESC samples explored in the Tang et
-al. study, we investigated if these results could be extended 
-to all (68) TCGA-CESC samples with matched WGS and RNA data, and if the 
-combined analysis could
-provide new insights into the pathogenicity of HPV in cervical cancer.
+al. study, we investigated if these results could be extended to all
+68 TCGA-CESC samples with matched WGS and RNA data, and if the
+combined analysis could provide new insights into the pathogenicity of
+HPV in cervical cancer.
 
 We detected genomic integration in 51 samples of 68 samples (226
 integrations total). From RNA-seq data, we detected a total of 376
@@ -180,42 +180,45 @@ integration. Empirical testing of gene counts at random intervals
 suggests a modest but significant enrichment of genes near integration
 points~(Z-test; p-value $<$ 0.004; Fig.~\ref{integration_counts}).
 This result is in concordance with a study by Akagi et al. (2014) on
-HPV integration. Next, we examined whether there were recurrent integrations
-(integrations from two or more samples within 50kb of each other) in our
-dataset and found two genomic regions containing recurrent integrations: chr13:73955151-74005092 (two samples), and chr8:128747810-128889296 (four samples).  The first region contains no nearby
-genes, and the latter region is within 1Mb of the oncogenes MYC and PVT1. Both
-oncogenes have been implicated in recurrent integrations~\cite{Hu2015}. Third, Hu et
-al. (2015) also report an enrichment of genomic instability-related
-elements near integration points, including short tandem repeats
-(STR), short interspersed nuclear element (SINE-Alu), long terminal
-repeat/endogenous retroviruses (LTR/ERV1), fragile X breakpoint
-cluster repeats, and satellite DNA. However, these elements are ubiquitous
-in the genome, and we did not find any enrichment of similar elements proximal 
-to the integration sites in our dataset
-(Methods)\footnote{NOTE: I am currently re-running this right now, but
-  I suspect this will hold, but will update this statement once it's
-  done.  Elements are short tandem repeats (STR), short interspersed
-  nuclear element (SINE-Alu), long terminal repeat/endogenous
-  retroviruses (LTR/ERV1), fragile X breakpoint cluster repeats, and
-  Satellite}.  Finally, while we did find a slight enrichment of
-oncogenes compared to randomly selected intervals, this finding was
-not significant.  Thus, the vast majority of integrations were not
-recurrent, nor were they in oncogenes. In totality, we cannot assert
-that the location of HPV genomic integration plays any role in CESC
-pathogenicity, and we decided to look at the RNA evidence near
-integration.
+HPV integration. Next, we examined whether there were recurrent
+integrations (integrations from two or more samples within 50kb of
+each other) in our dataset and found two genomic regions containing
+recurrent integrations: chr13:73955151-74005092 (two samples), and
+chr8:128747810-128889296 (four samples).  The first region contains no
+nearby genes, and the latter region is within 1Mb of the oncogenes MYC
+and PVT1. Both oncogenes have been implicated in recurrent
+integrations~\cite{Hu2015}. Third, Hu et al. (2015) also report an
+enrichment of genomic instability-related elements near integration
+points, including short tandem repeats (STR), short interspersed
+nuclear element (SINE-Alu), long terminal repeat/endogenous
+retroviruses (LTR/ERV1), fragile X breakpoint cluster repeats, and
+satellite DNA. However, these elements are ubiquitous in the genome,
+and we did not find any enrichment of similar elements proximal to the
+integration sites in our dataset (Methods)\footnote{NOTE: I am
+  currently re-running this right now, but I suspect this will hold,
+  but will update this statement once it's done.  Elements are short
+  tandem repeats (STR), short interspersed nuclear element (SINE-Alu),
+  long terminal repeat/endogenous retroviruses (LTR/ERV1), fragile X
+  breakpoint cluster repeats, and Satellite}.  Finally, while we did
+find a slight enrichment of oncogenes compared to randomly selected
+intervals, this finding was not significant. Summarizing, the vast
+majority of integrations were not recurrent, nor were they in
+oncogenes, and we cannot assert that the location of HPV genomic
+integration plays a significant role in CESC pathogenicity. Therefore,
+we decided to look at transcript expression near integration.
 
-For each integration, we examined the total transcriptional activity of
-the region within 10kb of the sample containing the integration by
+For each integration, we examined the total transcriptional activity
+of the region within 10kb of the sample containing the integration by
 comparing region's normalized transcriptional activity as the
-transcriptional activity of the same region in all other samples without
-the genomic integration.  We find a significant increase ($2.83\times$
-average) across all genomic segments with integrations
-(Fig.~\ref{all_expression}).  Remarkably, the increased expression is highly 
-correlated with the presence of a fusion transcript (Fig.~\ref{expression_transcripts}).
-There is a $7.41\times$ average increase if the genomic segment
-contains a fusion mRNA sequence, versus a small decrease
-($0.97\times$) when no fusion mRNA is seen.  
+transcriptional activity of the same region in all other samples
+without the genomic integration.  We find a significant increase in
+expression (\VB{P-value}) ($2.83\times$ average) across all genomic
+segments with integrations (Fig.~\ref{all_expression}).  Remarkably,
+the increased expression is highly correlated with the presence of a
+fusion transcript (Fig.~\ref{expression_transcripts}).  There is a
+$7.41\times$ average increase if the genomic segment contains a fusion
+mRNA sequence, versus a small decrease ($0.97\times$) when no fusion
+mRNA is seen.
 
 
 \begin{figure}[htpb]
@@ -230,37 +233,53 @@ contains a fusion mRNA sequence, versus a small decrease
   fusion transcriptions within the interval containing the genomic integration.}
 \end{figure}
 
-The observation that integration is often correlated with increased expression
-leaves us with two fundamental questions.  First, how does the
-increased expression contribute to pathogenesis.  Second, what causes
-the increase in expression, and in particular, why is this increase
-more prominent when fusion mRNA sequences are observed.
+The observation that integration is correlated with increased
+expression leaves us with two important questions.  First, how does
+the increased expression contribute to pathogenesis.  Second, what
+causes the increase in expression, and in particular, why is this
+increase more prominent when fusion mRNA sequences are observed.
 
-To answer the first question, we noted that 39\% 
-of the integrations had no genes within a 10kb interval, and yet 
-we still observed transcripts from 49\% of these geneless regions.  In
-order to determine what these transcripts are and what role they might
-play in pathogenicity, we started by annotating the expressed
-transcripts proximal to genomic integrations.  For each genomic segment
-containing an integration, we took all positions within 10kb interval of the
-integration that were covered by at least three or more mRNA reads, and
-then clustered the positions into intervals.  We merged any intervals
-that were within 5 bps of another interval.  We then counted the
-total number of gene and repeat element annotations that intersected any of the intervals using
-RefSeq genes~\cite{OLeary2016} or
-RepeatMasker~\cite{Tarailo-Graovac2009} annotations. We also
-computed the expected number of annotations observed from randomly
-selected segments as a baseline for comparison.   We found that regions
-with integrations were not only statistically significantly enriched in transcript annotations for genes~(Z-test; p-value $<$ 1e-20; Fig.~\ref{transcript_count})), but
-also for repeat elements such as DNA repeat elements, SINEs, LINEs, and LTRs~(Z-test; p-value $<$ 1e-20; Fig.~\ref{transcript_count}; see Fig.~\ref{transcript_count_all} for all other repeat elements).  Specifically, we see a two-fold increase in the total number of gene annotations of transcripts. Even more
-interesting, we see more than a 12-fold increase in LINE and LTR
-annotations of transcripts.  This is
-particularly surprising considering that we saw no statistically
-significant difference between the number of LINE and LTR annotations
-at the genomic level, however, we do see a statistically significant
-difference at the transcript level.  Thus, while repeat elements are ubiquitous throughout 
-the genome, we see significantly more expression of these elements when they are proximal
-to viral integrations (Fig.~\ref{expression_transcripts})\footnote{This part is confusing as we are mixing two different metrics, annotations and expression.  This needs to be cleaned up}.    
+
+
+%In order to determine what these transcripts are and what role they
+%might play in pathogenicity, we started by annotating the expressed
+%transcripts proximal to genomic integrations.  For each genomic
+%segment containing an integration, we took all positions within 10kb
+%interval of the integration that were covered by at least three or
+%more mRNA reads, and then clustered the positions into intervals.  We
+%merged any intervals that were within 5 bps of another interval.
+% We also computed the expected number of annotations observed from randomly selected
+%segments as a baseline for comparison.  We found that regions with
+%integrations were not only statistically significantly enriched in
+%transcript annotations for genes~(Z-test; p-value $<$ 1e-20;
+%Fig.~\ref{transcript_count})), but also for repeat elements such as
+%DNA repeat elements, SINEs, LINEs, and LTRs~(Z-test; p-value $<$
+%1e-20; Fig.~\ref{transcript_count}; see
+%Fig.~\ref{transcript_count_all} for all other repeat elements).
+%Specifically, we see a two-fold increase in the total number of gene
+%annotations of transcripts. Even more interesting, we see more than a
+%12-fold increase in LINE and LTR annotations of transcripts. 
+
+
+To answer the first question, we observed that 39\% of the
+integrations had no gene within a 10kb interval, but we still observed
+transcripts from 49\% of those regions. To understand the function of
+the transcripts, we marked all transcribed genomic intervals (Methods)
+and compared against RefSeq genes~\cite{OLeary2016} or
+RepeatMasker~\cite{Tarailo-Graovac2009} annotations. For each
+integration and a class of annotations (e.g. LINE), we counted the
+fraction of annotated elements that were transcribed, and compared
+that with the fraction of annotated elements of the same class in
+randomly selected segments (Fig.~\ref{transcript_count}). We found
+that genes (p-val$:XXX$), LINEs (p-val$:XXX$), SINEs (p-val$:XXX$),
+LTRs (p-val$:XXX$) were all much more likely to be transcribed in the
+proximity of an integration site. Genes were twice as likely, and
+LINEs and LTRs were $12\times$ more likely to be transcribed. Recall
+that we had seen no statistically significant difference between the
+number of LINE and LTR annotations at the genomic level. While repeat
+elements are ubiquitous throughout the genome, they are much more
+likely to be transcribed in the proximity of a viral integration
+(Fig.~\ref{expression_transcripts}).
 
 %transcribed regions near integrations
 %refer to methods, clear explanation of statistical test
@@ -269,27 +288,19 @@ to viral integrations (Fig.~\ref{expression_transcripts})\footnote{This part is 
 
 This surprising result suggests one potential avenue for increased
 pathogenicity: genomic instability and pathway disruption caused by
-expression of LINE and LTR elements that are normally silent.
-L1 elements are retrotransposons that have a ``cut and paste''
-mechanism which allow them to replicate through RNA intermediates and
-re-insert back into genomic DNA.  L1 elements have been shown to
-create double stranded breaks in the host cell genome, leading to
-genomic instability~\cite{Gasior2006}.  L1 elements are typically
-epigenetically repressed in somatic
-cells~\cite{Kinomoto2007,Sigurdsson2012}, but they have been shown to
-be active in selected neoplasms~\cite{Rodic2013,Xiao-Jie2016}.  LTRs
-can act as promoters, enhancers, and transcriptional factor-binding
-sites, and can potentially be transcriptionally active, depending on
-the tissue~\cite{Yu2013}.  In most cases, LTRs are transcriptionally
-silenced by epigenetic mechanisms. However they have been shown to
-have up-regulated expression in cancer~\cite{Romanish2010}.  Our
-results show a four to five-fold increase in transcription expression of these
-elements in regions proximal to integration sites
-(Fig.~\ref{expression_transcripts}).  As HPV randomly integrates into
-the genome, it might fall proximal to LINE and LTR elements and result
-in deregulation of cellular pathways by the active transcription of
-LINE and LTR elements, and in particular increase genomic instability
-via production of L1 elements.
+expression of LINE and LTR elements that are normally silent. L1
+elements are retrotransposons and have been shown to create double
+stranded breaks in the host cell genome when transcribed, leading to
+genomic instability~\cite{Gasior2006}.  Similarly, LTRs can act as
+promoters, enhancers, and transcriptional factor-binding sites, and
+can potentially be transcriptionally active, depending on the
+tissue~\cite{Yu2013}. LINEs and LTRs are both epigenetically repressed
+in somatic cells~\cite{Kinomoto2007,Sigurdsson2012}, but have been
+shown to be active in selected
+neoplasms~\cite{Rodic2013,Xiao-Jie2016,Romanish2010}. We found a four
+to five-fold increase in transcription expression of these elements in
+regions proximal to integration sites (p-val:$xxx$,
+Fig.~\ref{expression_transcripts}).
 
 \begin{figure}[htpb]
   \centering
@@ -303,20 +314,20 @@ correlated with increased transcription, we started by characterizing
 the orientation of fusion transcripts. As the RNA-sequencing library
 preparation was not strand specific, we could not determine the active
 strand directly. However, because HPV genes are known to be
-transcriptionally active in cervical cancer cells~\cite{Johansson2013}, we can
-assume that the majority of viral transcripts should be oriented in
-the same direction as the viral gene.  Using this assumption, we could
-determine if the human portion of a fusion transcript was upstream or
-downstream of the viral gene. 82\% of fusion mRNA sequences showed the
-human fragment to be downstream of the viral genes.
-(Fig.~\ref{mrna_directions}). Of the remaining 18\% of the sequences where
-the human portion was upstream of the viral gene, 87\% were within
-10kb of an annotated gene.  These observations support our hypothesis
-that transcription of fusion mRNA sequences are largely being driven
-by the upstream regulatory elements within the viral genome.  In the
-rare cases in which the viral gene is downstream of the human portion
-of the fusion transcript, we suspect that regulatory elements in the
-human genome are driving this expression.
+transcriptionally active in cervical cancer
+cells~\cite{Johansson2013}, we can assume that the majority of viral
+transcripts should be oriented in the same direction as the viral
+gene.  Using this assumption, we could determine if the human portion
+of a fusion transcript was upstream or downstream of the viral
+gene. 82\% of fusion mRNA sequences showed the human fragment to be
+downstream of the viral genes.  (Fig.~\ref{mrna_directions}). Of the
+remaining 18\% of the sequences where the human portion was upstream
+of the viral gene, 87\% were within 10kb of an annotated gene.  These
+observations suggest that transcription of fusion mRNA sequences are
+largely driven by the upstream regulatory elements within the viral
+genome.  In the rare cases in which the viral gene is downstream of
+the human portion of the fusion transcript, human regulatory elements
+may drive expression.
 
 %, but a fold change of 0.86 to 0.92 when no fusion mRNA is presents
 
@@ -327,13 +338,12 @@ genomic integration, we categorized the integration as a simple,
 complex, or fusionless integration site (Fig.~\ref{updown}a).  We
 define simple integrations as a single integration within the 10kb
 interval with the chimeric paired-end reads being concordant, allowing
-us to determine what is upstream and downstream of the integration site.  We
-define complex integrations as regions containing multiple
+us to identify regions upstream and downstream of the viral gene. In
+contrast, define complex integrations as regions containing multiple
 fusion mRNA sequences with discordant chimeric paired reads. Finally,
-we define an integration as a fusionless integration if it has no
-chimeric mRNA paired-end reads that can be used to determine
-orientation. Using these definitions, we characterized 68, 51, and
-107 integrations as simple, complex, and fusionless, respectively.
+regions without chimeric RNA are denoted as `fusionless'. Using these
+definitions, we characterized 68, 51, and 107 integrations as simple,
+complex, and fusionless, respectively.
 
 %as either having two or more integrations within the 10kb interval
 %that are sufficiently far apart that we can detect them as being
@@ -341,18 +351,21 @@ orientation. Using these definitions, we characterized 68, 51, and
 %as a single integration event.  This cluster can produce
 
 We observed (as before) that in the presence of fusion mRNA (simple or
-complex), there is a two- to five-fold increase in expression local to
-the integration point (Fig.~\ref{updown}b).  The increase in
-expression can be evident up to 100kb around the integration point
-(Fig.~\ref{updown_250kb}).  In the case of simple integrations, there
-is a clear increase downstream of the integrated viral sequence.
-Finally, integrations without any fusion mRNA sequences show slight
-decrease in expression.  These observations show that viral
-integration generally increases local transcriptional activity,
-possibly driven by the viral regulatory elements. The driving factor
-is agnostic to whatever is downstream of the integration, and can
-result in transcription of elements that are normally silent or not
-expressed in normal samples.
+complex), there is a two- to five-fold increase in expression
+(p-val:$xxx$) local to the integration point (Fig.~\ref{updown}b).
+The increase in expression can be evident up to 100kb around the
+integration point (Fig.~\ref{updown_250kb}).  In the case of simple
+integrations, there is a clear increase downstream of the integrated
+viral sequence.  Finally, fusionless integrations show a slight
+decrease in expression.
+
+Taken together, our results are consistent with the following model:
+HPV integrates into a random location and causes dysregulated
+expression of all proximal elements possibly driven by the viral
+regulatory elements. This can result in transcription of elements that
+are normally silent or not expressed in normal samples. When the
+insertion is proximal to LINE/LTR elements, there is an increase in
+genomic instability.
 
 \begin{figure}[htpb]
   \centering
@@ -360,49 +373,6 @@ expressed in normal samples.
   \subfloat[Log$_2$fold expression near integration point.]{\includegraphics[width= 4in,frame]{{results/updown.10000}.pdf}}
 \caption[Fusion reads supp.]
         {\label{updown}  {\bf Categorization of integration points and expression change around integration point}.  a) We categorize integration points into three categories: simple integration, complex integration, and fusionless mRNA integration.  Simple integrations have no other integrations within a 10kb window, and at least 75\% of the chimeric paired-end reads supporting a fusion mRNA event are oriented in the same direction.  Complex integrations either have multiple integration events within a 10kb window, have multiple fusion mRNA supporting different orientations, or have chimeric paired-end reads that support conflicting orientations for the same mRNA fusion event.  Integrations that have no fusion mRNA events are categorized in a separate category.  b) We report the average log-fold expression change upstream and downstream of an integration event.  The position is reported relative to the integration point in the human genome, with negative position being upstream of the integration event, and positive position being downstream of the integration event.  The results are separated out by the integration category.  In total, there are 68 simple integrations, 51 complex integrations, and 107 integration events with no fusion mRNA sequences.} %35,
-\end{figure}
-
-Key unanswered questions are why some integrations result in fusion
-mRNA transcripts and others do not, and why this difference causes a
-large discrepancy between expression levels for integrations with and
-without fusion transcripts.  Closer inspection of several integrations
-with fusion transcripts gave clues to these questions.  We found that
-for some integrations, that the segments from the human and viral
-genomes could be arranged in a cyclic structure
-(Fig.~\ref{tcga_c5_a0tn}).  For example, the sample TCGA-C5-A0TN had
-235 chimeric paired-end reads between chr2:195586245 and HPV16:2593,
-149 discordant paired-end reads between chr2:195603512 and
-chr3:126826267, and 229 chimeric paired-end reads between
-chr3:126849186 and HPV:6071 (Fig.~\ref{tcga_c5_a0tn}a). A relatively
-simple explanation for this complex rearrangement is that it
-represents extrachromosomal DNA (ecDNA), where fragments of the genome
-(human and virus) exist in circular forms outside of the
-chromosomes. Recent results have shown that ecDNA is found in nearly
-half of all cancers, and that amplified driver oncogenes were commonly
-found in ecDNA~\cite{Turner2017}. Thus, it is not implausible that
-human-viral ecDNA might also exist, especially because HPV can exist
-in both integrated and episomal forms within cervical
-cells~\cite{Williams2011,Shin2014}.
-
-Human-viral ecDNA would not be bound to the chromatin and would be
-readily accessible for transcription, allowing it to transcribe freely
-and unregulated.  While the majority of integrations do not occur near
-oncogenes, our own observations show that there is an increase
-transcription of LINE and LTR elements near integration sites, and
-thus human-viral ecDNA structures that contain LINE/LTR elements might
-provide selective advantages and would selected for amplification.
-This observation might explain why there is local copy number
-amplification often found flanking the integrated
-regions~\ref{Akagi2014}, i.e., the flanking regions represent
-amplified ecDNA.  This is an exciting hypothesis that warrants further
-investigation.
-
-\begin{figure}[htpb]
-  \centering
-  \subfloat[TCGA-C5-A0TN.]{\includegraphics[width=3in,frame]{{results/episome}.pdf}}
-  \subfloat[TCGA-EK-A2RE.]{\includegraphics[width=3in,frame]{{results/episome-TCGA-EK-A2RE}.pdf}}\\  
-\caption[Examples of hypothetical ecDNA structures.]
-{\label{tcga_c5_a0tn}  {\bf Examples of hypothetical ecDNA structures.}  a) Hypothetical ecDNA structure for an integration from TCGA-C5-A0TN and b) hypothetical ecDNA structure for an integration from TCGA-EK-A2RE.  The number of paired-end reads supporting each boundary is shown.}
 \end{figure}
 
 \section*{Discussion}
@@ -474,14 +444,38 @@ also be more stable, especially in light of the observation that the
 human portion is typically downstream of the viral portion in fusion
 mRNA sequences.
 
-The impact of viral integration on proximal transcription expression
-is clear.  Our study highlights the need for more research on the role
-of HPV integration on oncogenesis, and in particular, with more focus
-on samples with non-hotspot integrations.  As the majority of
-integrations are not occurring in genomic hotspots, mechanisms such as
-increased LINE and LTR expressions and the formation of human-viral
-ecDNA for amplification of oncogenic elements might play a crucial
-role in tumor progression and genomic instability.
+
+The question about why viral integration leads to dysregulation of
+expression is not fully resolved. Recent studies have shown the
+presence of extrachromosomal circular (ecDNA) in nearly half of all
+cancers, with amplified driver oncogenes were commonly found on
+ecDNA~\cite{Turner2017}. Oncogenes on ecDNA show higher expression
+presumably because they are more accessible. We found through a close
+inspection of several integrations that the segments from the human
+and viral genomes could be arranged in a cyclic structure
+(Fig.~\ref{tcga_c5_a0tn}).  For example, the sample TCGA-C5-A0TN had
+235 chimeric paired-end reads between chr2:195586245 and HPV16:2593,
+149 discordant paired-end reads between chr2:195603512 and
+chr3:126826267, and 229 chimeric paired-end reads between
+chr3:126849186 and HPV:6071 (Fig.~\ref{tcga_c5_a0tn}a). It is not
+implausible that human-viral ecDNA might also exist, especially
+because HPV can exist in both integrated and episomal forms within
+cervical cells~\cite{Williams2011,Shin2014}, and that would explain
+both local copy number amplification near integrated
+regions~\cite{Akagi2014} as well as higher expression in the proximal
+region. This is an exciting hypothesis that warrants further
+investigation.
+
+\begin{figure}[htpb]
+  \centering
+  \subfloat[TCGA-C5-A0TN.]{\includegraphics[width=3in,frame]{{results/episome}.pdf}}
+  \subfloat[TCGA-EK-A2RE.]{\includegraphics[width=3in,frame]{{results/episome-TCGA-EK-A2RE}.pdf}}\\  
+\caption[Examples of hypothetical ecDNA structures.]
+{\label{tcga_c5_a0tn}  {\bf Examples of hypothetical ecDNA structures.}  a) Hypothetical ecDNA structure for an integration from TCGA-C5-A0TN and b) hypothetical ecDNA structure for an integration from TCGA-EK-A2RE.  The number of paired-end reads supporting each boundary is shown.}
+\end{figure}
+
+
+
 
 %One possible direction to better understand the role of LINE and LTR expression is combining proteomics and genomics.  In particular, focusing on whether HPV positive samples with integration show higher expression of L1 encoded proteins, ORF1p and ORF2p, compared to HPV positive samples without integration.  
  
