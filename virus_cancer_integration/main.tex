@@ -178,7 +178,7 @@ looked at the annotations near integration points. 67\% of the
 integrations had an annotated gene within 10kb of the genomic
 integration. Empirical testing of gene counts at random intervals
 suggests a modest but significant enrichment of genes near integration
-points~(Z-test; p-value $<$ 0.004; Fig.~\ref{integration_counts}).
+points~(Z-test; p-value $<$ 1e-6; Fig.~\ref{integration_counts}).
 This result is in concordance with a study by Akagi et al. (2014) on
 HPV integration. Next, we examined whether there were recurrent
 integrations (integrations from two or more samples within 50kb of
@@ -193,13 +193,7 @@ points, including short tandem repeats (STR), short interspersed
 nuclear element (SINE-Alu), long terminal repeat/endogenous
 retroviruses (LTR/ERV1), fragile X breakpoint cluster repeats, and
 satellite DNA. However, these elements are ubiquitous in the genome,
-and we did not find any enrichment of similar elements proximal to the
-integration sites in our dataset (Methods)\footnote{NOTE: I am
-  currently re-running this right now, but I suspect this will hold,
-  but will update this statement once it's done.  Elements are short
-  tandem repeats (STR), short interspersed nuclear element (SINE-Alu),
-  long terminal repeat/endogenous retroviruses (LTR/ERV1), fragile X
-  breakpoint cluster repeats, and Satellite}.  Finally, while we did
+and we only found significant enrichment of SINE elements~(Z-test; p-value $<$ 1e-7; Fig.~\ref{integration_counts}) proximal to integration sites.  Finally, while we did
 find a slight enrichment of oncogenes compared to randomly selected
 intervals, this finding was not significant. Summarizing, the vast
 majority of integrations were not recurrent, nor were they in
@@ -212,13 +206,11 @@ of the region within 10kb of the sample containing the integration by
 comparing region's normalized transcriptional activity as the
 transcriptional activity of the same region in all other samples
 without the genomic integration.  We find a significant increase in
-expression (\VB{P-value}) ($2.83\times$ average) across all genomic
+expression ($2.83\times$ average increase; Wilcoxon signed rank test; p-value $<$ 1e-14) across all genomic
 segments with integrations (Fig.~\ref{all_expression}).  Remarkably,
 the increased expression is highly correlated with the presence of a
-fusion transcript (Fig.~\ref{expression_transcripts}).  There is a
-$7.41\times$ average increase if the genomic segment contains a fusion
-mRNA sequence, versus a small decrease ($0.97\times$) when no fusion
-mRNA is seen.
+fusion transcript (Fig.~\ref{expression_transcripts}).  There is a statistically significant
+increase ($7.41\times$ average increase; Wilcoxon signed rank test; p-value $<$ 1e-15) if the genomic segment contains a fusion mRNA sequence, versus a small but not significant decrease ($0.97\times$; Wilcoxon signed rank test; p-value $<$ 0.721) when no fusion mRNA is seen.
 
 
 \begin{figure}[htpb]
@@ -239,28 +231,6 @@ the increased expression contribute to pathogenesis.  Second, what
 causes the increase in expression, and in particular, why is this
 increase more prominent when fusion mRNA sequences are observed.
 
-
-
-%In order to determine what these transcripts are and what role they
-%might play in pathogenicity, we started by annotating the expressed
-%transcripts proximal to genomic integrations.  For each genomic
-%segment containing an integration, we took all positions within 10kb
-%interval of the integration that were covered by at least three or
-%more mRNA reads, and then clustered the positions into intervals.  We
-%merged any intervals that were within 5 bps of another interval.
-% We also computed the expected number of annotations observed from randomly selected
-%segments as a baseline for comparison.  We found that regions with
-%integrations were not only statistically significantly enriched in
-%transcript annotations for genes~(Z-test; p-value $<$ 1e-20;
-%Fig.~\ref{transcript_count})), but also for repeat elements such as
-%DNA repeat elements, SINEs, LINEs, and LTRs~(Z-test; p-value $<$
-%1e-20; Fig.~\ref{transcript_count}; see
-%Fig.~\ref{transcript_count_all} for all other repeat elements).
-%Specifically, we see a two-fold increase in the total number of gene
-%annotations of transcripts. Even more interesting, we see more than a
-%12-fold increase in LINE and LTR annotations of transcripts. 
-
-
 To answer the first question, we observed that 39\% of the
 integrations had no gene within a 10kb interval, but we still observed
 transcripts from 49\% of those regions. To understand the function of
@@ -271,9 +241,8 @@ integration and a class of annotations (e.g. LINE), we counted the
 fraction of annotated elements that were transcribed, and compared
 that with the fraction of annotated elements of the same class in
 randomly selected segments (Fig.~\ref{transcript_count}). We found
-that genes (p-val$:XXX$), LINEs (p-val$:XXX$), SINEs (p-val$:XXX$),
-LTRs (p-val$:XXX$) were all much more likely to be transcribed in the
-proximity of an integration site. Genes were twice as likely, and
+that genes, LINEs, SINEs, LTRs were all statistically significantly more likely to be transcribed in the
+proximity of an integration site (Z-test; p-value $<$ 1e-20). Genes were twice as likely, and
 LINEs and LTRs were $12\times$ more likely to be transcribed. Recall
 that we had seen no statistically significant difference between the
 number of LINE and LTR annotations at the genomic level. While repeat
@@ -479,7 +448,7 @@ investigation.
 
 %One possible direction to better understand the role of LINE and LTR expression is combining proteomics and genomics.  In particular, focusing on whether HPV positive samples with integration show higher expression of L1 encoded proteins, ORF1p and ORF2p, compared to HPV positive samples without integration.  
  
-\section*{Method}
+\section*{Methods}
 \paragraph{\textbf{ViFi.}}
 We present \textbf{V}irus \textbf{I}ntegration and \textbf{F}usion \textbf{I}dentification (ViFi), a new pipeline for detection of integration sites (Fig.~\ref{flowchart}).  Unlike other integration detection pipelines that use reference-based alignment mapping for identifying viral reads, ViFi uses a combination of reference-based alignment mapping and ensemble of profile HMMs to identify viral reads.  
 
@@ -543,6 +512,25 @@ TCGA-CESC & WGS and RNA-seq &Biological& 68 & TCGA~\cite{TODO} \\ \hline
 \end{tabular}
 \end{table*}
 
+\paragraph{\textbf{Annotation of genomic and transcriptomic regions.}}
+In order to determine what these transcripts are and what role they
+might play in pathogenicity, we started by annotating the expressed
+transcripts proximal to genomic integrations.  For each genomic
+segment containing an integration, we took all positions within 10kb
+interval of the integration that were covered by at least three or
+more mRNA reads, and then clustered the positions into intervals.  We
+merged any intervals that were within 5 bps of another interval.
+We also computed the expected number of annotations observed from randomly selected
+segments as a baseline for comparison.  We found that regions with
+integrations were not only statistically significantly enriched in
+transcript annotations for genes~(Z-test; p-value $<$ 1e-20;
+Fig.~\ref{transcript_count})), but also for repeat elements such as
+DNA repeat elements, SINEs, LINEs, and LTRs~(Z-test; p-value $<$
+1e-20; Fig.~\ref{transcript_count}; see
+Fig.~\ref{transcript_count_all} for all other repeat elements).
+Specifically, we see a two-fold increase in the total number of gene
+annotations of transcripts. Even more interesting, we see more than a
+12-fold increase in LINE and LTR annotations of transcripts. 
 %\subsection{HCC WGS patient results}
 %Of the 22 experimentally verified integration points, Viral-HMM was able to detect 21 of the points, VERSE 8 of the points, and ...  Note that in the VERSE paper, the authors reported that they were able to detect 16 out of the 22 points.  We had difficulties in running VERSE on our samples, and tools used within the VERSE pipeline produced very large uncompressed SAM files (up to 1.2 TB in size).  We attempted to fix this by having VERSE output compressed BAM files, which allowed several of the failed runs to complete, but not all.  We suspect that with more efficient use of piping, VERSE could avoid producing many of the large files and would be able to complete on our system and potentially achieve the results reported in their paper.
 
@@ -614,9 +602,9 @@ VB is a partner in Digital Proteomics, LLC (DP), which licenses and sells comput
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=1\linewidth]{{results/expected.counts.violin}.pdf}\\
+  \includegraphics[width=1\linewidth]{{results/expected.wgs.counts.violin}.pdf}\\
 \caption[Annotations of integrated regions.]
-{\label{integration_counts}  {\bf Observed and expected number of annotations of the integrated regions.}  We show the violin plots of the expected number of counts from random integrations for each annotation over 1000 simulated experiments, and the actual number of annotations for the observed integrations found in our TCGA-CESC dataset (in red).  The quantiles of the violin plots are displayed with lines.  The p-values of the observed annotation counts (Z-test) are: LINE $<$ 0.882;	LTR $<$ 0.013;  Gene $<$ 0.004; and	Oncogenes $<$ 0.179.}
+{\label{integration_counts}  {\bf Observed and expected number of annotations of the integrated regions.}  We show the violin plots of the expected number of counts from random integrations for each annotation over 100 simulated experiments, and the actual number of annotations for the observed integrations found in our TCGA-CESC dataset (in red).  The quantiles of the violin plots are displayed with lines.  The p-values of the observed annotation counts (Z-test) are: SINE $<$ 1e-7; LINE $<$ 0.585;	LTR $<$ 0.468;  DNA $<$ 0.56; Gene $<$ 1e-6; and	Oncogenes $<$ 0.179.}
 \end{figure}
 
 \begin{figure}[htpb]
